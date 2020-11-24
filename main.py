@@ -33,7 +33,9 @@ def mac_changer_menu():
         manager.set_random_mac_address()
         main_menu()
     elif option == 2:
-        pass
+        input_address = menu_helper.read_mac_address()
+        manager.set_custom_mac_address(input_address)
+        main_menu()
     elif option == 3:
         pass
     elif option == 4:

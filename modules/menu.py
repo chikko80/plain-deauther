@@ -1,10 +1,12 @@
 from termcolor import cprint,colored
 import time
+import re
 class MenuHelper:
 
     def __init__(self,manager):
         self.manager = manager
         self.error_line = False
+        self.last_print = 0
 
     def read_option(self,option='option'):
         print(f"\nSelect {option}:\t",end="")
@@ -29,6 +31,26 @@ class MenuHelper:
                 print(f"Select {option}:\t",end="")
                 self.error_line = True
 
+    def read_mac_address(self):
+        valid_mac = r"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
+        regex = re.compile(valid_mac)
+        print(f"Custom MAC:\t",end="")
+        while True:
+            try:
+                selected_option = str(input())
+                if not regex.match(selected_option):
+                    raise ValueError
+                if self.error_line:
+                    clean_last_line()
+                    self.error_line = False
+                clean_last_line()
+                return selected_option
+            except ValueError:
+                clean_last_line()
+                clean_last_line()
+                cprint(f"No valid input. Please enter a valid mac address","red")
+                print(f"Custom MAC:\t",end="")
+                self.error_line = True
 
     def print_interfaces(self,interfaces):
         self.print_colored_line("blue")
@@ -56,7 +78,7 @@ class MenuHelper:
 
     def print_mac_changer_menu(self):
         self.print_colored_line('magenta')
-        cprint(f'Selected interface: {self.manager.chosen_interface.interface}   |   Mode: {self.manager.chosen_interface.mode}   |   MAC: {self.manager.chosen_interface.mac_address}','yellow')
+        cprint(f'Selected interface: {self.manager.chosen_interface.interface}   |   Mode: {self.manager.chosen_interface.mode}   |   MAC: {self.manager.chosen_interface.mac_address}','magenta')
         self.print_colored_line('magenta')
         print()
         cprint("{: <5} {: <10} ".format("0.","Back to main menu"),'green')

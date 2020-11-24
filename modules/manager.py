@@ -20,10 +20,10 @@ class Manager:
                 interface = Interface(str(index),remove_empty[0],remove_empty[1],remove_empty[2],remove_empty[3])
                 self.interfaces.append(interface)
                 index +=1
-        self.fetch_mac_addresses()
+        self.read_mac_addresses()
 
-    def fetch_mac_addresses(self,update=False):    
-        if update:
+    def read_mac_addresses(self,update_current=False):    
+        if update_current:
             output = os.popen(f"ip link show {self.chosen_interface.interface}").read()
             addr = re.search(r"([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})",output).group(0)
             self.chosen_interface.mac_address = addr.upper()
@@ -41,7 +41,14 @@ class Manager:
         os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
         os.popen(f"macchanger -r {self.chosen_interface.interface} ").read()
         os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
-        self.fetch_mac_addresses(update=True)
+        self.read_mac_addresses(update_current=True)
+
+    
+    def set_custom_mac_address(self, custom_address):
+        os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
+        os.popen(f"macchanger -m {custom_address} {self.chosen_interface.interface} ").read()
+        os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
+        self.read_mac_addresses(update_current=True)
 
     
     def get_interface_state(self):
