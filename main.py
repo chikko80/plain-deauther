@@ -34,12 +34,13 @@ def mac_changer_menu():
         main_menu()
     elif option == 2:
         input_address = menu_helper.read_mac_address()
+        if not input_address:
+            return main_menu()
         manager.set_custom_mac_address(input_address)
         main_menu()
     elif option == 3:
-        pass
-    elif option == 4:
-        pass
+        manager.reset_mac_address()
+        main_menu()
 
 def main_menu():
     menu_helper.print_main_menu_options()

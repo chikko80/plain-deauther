@@ -50,6 +50,11 @@ class Manager:
         os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
         self.read_mac_addresses(update_current=True)
 
+    def reset_mac_address(self):
+        os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
+        os.popen(f"macchanger -p {self.chosen_interface.interface} ").read()
+        os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
+        self.read_mac_addresses(update_current=True)
     
     def get_interface_state(self):
         output = os.popen(f"cat /sys/class/net/{self.chosen_interface.interface}/operstate").read()
