@@ -22,20 +22,31 @@ class Manager:
                 index +=1
         self.fetch_mac_addresses()
 
-    def fetch_mac_addresses(self):    
-        for interface in self.interfaces:
-            output = os.popen(f"ip link show {interface.interface}").read()
+    def fetch_mac_addresses(self,update=False):    
+        if update:
+            output = os.popen(f"ip link show {self.chosen_interface.interface}").read()
             addr = re.search(r"([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})",output).group(0)
-            interface.mac_address = addr.upper()
+            self.chosen_interface.mac_address = addr.upper()
+        else:
+            for interface in self.interfaces:
+                output = os.popen(f"ip link show {interface.interface}").read()
+                addr = re.search(r"([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})",output).group(0)
+                interface.mac_address = addr.upper()
 
     def select_interface(self,option):
         index = option - 1 
         self.chosen_interface = self.interfaces[index]
     
     def set_random_mac_address(self):
-        os.popen(f"ifconfig {self.chosen_interface.interface} down")
-        os.open(f"macchanger -r {self.chosen_interface.interface}")
-        os.popen(f"ifconfig {self.chosen_interface.interface} up")
+        os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
+        os.popen(f"macchanger -r {self.chosen_interface.interface} ").read()
+        os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
+        self.fetch_mac_addresses(update=True)
+
+    
+    def get_interface_state(self):
+        output = os.popen(f"cat /sys/class/net/{self.chosen_interface.interface}/operstate").read()
+        return output
 
 
 

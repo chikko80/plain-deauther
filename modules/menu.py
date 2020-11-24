@@ -65,7 +65,7 @@ class MenuHelper:
         cprint("{: <5} {: <10} ".format("3.","Reset to original"),'green')
         # cprint("{: <5} {: <10} ".format("4.","xxxxxxxx"),'green')
         print()
-        self.print_colored_line('yellow')
+        self.print_colored_line('magenta')
 
     def print_banner(self):
         print()
