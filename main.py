@@ -1,13 +1,13 @@
 import os
 from termcolor import cprint,colored
-from modules.menu import MenuHelper
+from modules.menu_helper import MenuHelper
 from modules.manager import Manager
 
 manager = Manager()
 menu_helper = MenuHelper(manager)
 
 
-def main():
+def menu():
     start()
     select_interface()
     main_menu()
@@ -15,10 +15,9 @@ def main():
 
 def start():    
     menu_helper.print_banner()
-    manager.read_interfaces()
-    
-    
+
 def select_interface():
+    manager.read_interfaces()
     menu_helper.print_interfaces(manager.interfaces)
     option = menu_helper.read_option(option="interface")
     manager.select_interface(option)
@@ -26,7 +25,6 @@ def select_interface():
 def mac_changer_menu():
     menu_helper.print_mac_changer_menu() 
     option = menu_helper.read_option(option="mac_changer")
-
     if option == 0:
         main_menu()
     elif option == 1:
@@ -52,16 +50,13 @@ def main_menu():
     elif option == 1:
         mac_changer_menu()        
     elif option == 2:
-        pass
+        manager.set_monitor_mode()
+        main_menu()
     elif option == 3:
-        pass
+        manager.set_managed_mode()
+        main_menu()
     elif option == 4:
         pass
 
-
-
-
-
-
 if __name__ == "__main__":
-    main()
+    menu()

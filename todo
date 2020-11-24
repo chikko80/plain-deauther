@@ -1,0 +1,1 @@
+airmon-ng check kill

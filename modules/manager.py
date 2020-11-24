@@ -1,8 +1,10 @@
-import os
 from termcolor import cprint
 from .interface import Interface
-from .menu import clean_last_line
+from .menu_helper import clean_last_line
+import os
 import re
+import time
+
 class Manager:
 
     def __init__(self):
@@ -10,6 +12,7 @@ class Manager:
         self.chosen_interface = None
               
     def read_interfaces(self):
+        self.interfaces = []
         output = os.popen("airmon-ng").read()
         output = output.split("\n")
         index = 1
@@ -38,29 +41,55 @@ class Manager:
         self.chosen_interface = self.interfaces[index]
     
     def set_random_mac_address(self):
-        os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
+        self.set_interface_down()
         os.popen(f"macchanger -r {self.chosen_interface.interface} ").read()
-        os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
+        self.set_interface_up()
         self.read_mac_addresses(update_current=True)
 
-    
     def set_custom_mac_address(self, custom_address):
-        os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
+        self.set_interface_down()
         os.popen(f"macchanger -m {custom_address} {self.chosen_interface.interface} ").read()
-        os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
+        self.set_interface_up()
         self.read_mac_addresses(update_current=True)
 
     def reset_mac_address(self):
-        os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
+        self.set_interface_down()
         os.popen(f"macchanger -p {self.chosen_interface.interface} ").read()
-        os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
+        self.set_interface_up()
         self.read_mac_addresses(update_current=True)
-    
+
+    #TODO check if up/down automatically
+    def set_monitor_mode(self):
+        os.popen(f"airmon-ng start {self.chosen_interface.interface}").read()
+        self.read_interfaces()
+        self.check_and_update_mode("monitor")
+        
+    def set_managed_mode(self):
+        os.popen(f"airmon-ng stop {self.chosen_interface.interface}").read()
+        self.read_interfaces()
+        self.check_and_update_mode("managed")
+
+    def set_interface_down(self):
+        os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
+
+    def set_interface_up(self):
+        os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
+
     def get_interface_state(self):
         output = os.popen(f"cat /sys/class/net/{self.chosen_interface.interface}/operstate").read()
         return output
 
+    def check_and_update_mode(self,mode):
+        if mode == "monitor":
+            target_mode = self.chosen_interface.interface + "mon"
+        else:
+            target_mode = self.chosen_interface.interface[:len(self.chosen_interface.interface)-3]
 
+        for interface in self.interfaces:
+            if target_mode == interface.interface:
+                self.chosen_interface = interface
+                return
+        #TODO Errorhandling
 
 
             
