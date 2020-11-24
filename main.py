@@ -23,16 +23,31 @@ def select_interface():
     option = menu_helper.read_option(option="interface")
     manager.select_interface(option)
 
+def mac_changer_menu():
+    menu_helper.print_mac_changer_menu() 
+    option = menu_helper.read_option(option="mac_changer")
+
+    if option == 0:
+        main_menu()
+    elif option == 1:
+        manager.set_random_mac_address()
+        main_menu()
+    elif option == 2:
+        pass
+    elif option == 3:
+        pass
+    elif option == 4:
+        pass
 
 def main_menu():
-    menu_helper.print_interface_options()
+    menu_helper.print_main_menu_options()
     option = menu_helper.read_option(option="main_menu")
 
     if option == 0:
         select_interface()
         main_menu()
     elif option == 1:
-        pass
+        mac_changer_menu()        
     elif option == 2:
         pass
     elif option == 3:

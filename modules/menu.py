@@ -20,6 +20,7 @@ class MenuHelper:
                 if self.error_line:
                     clean_last_line()
                     self.error_line = False
+                clean_last_line()
                 return selected_option
             except ValueError:
                 clean_last_line()
@@ -40,7 +41,9 @@ class MenuHelper:
     def table_prettifier(self,row_as_list):
         print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
 
-    def print_interface_options(self):
+    def print_main_menu_options(self):
+        self.print_colored_line('yellow')
+        cprint(f'Selected interface: {self.manager.chosen_interface.interface}   |   Mode: {self.manager.chosen_interface.mode}   |   MAC: {self.manager.chosen_interface.mac_address}','yellow')
         self.print_colored_line('yellow')
         print()
         cprint("{: <5} {: <10} ".format("0.","Change interface"),'green')
@@ -50,9 +53,19 @@ class MenuHelper:
         cprint("{: <5} {: <10} ".format("4.","Scan Networks"),'green')
         print()
         self.print_colored_line('yellow')
-    
-    def print_colored_line(self,color):  
-        cprint("--------------------------------------------------------------------------------------",color)
+
+    def print_mac_changer_menu(self):
+        self.print_colored_line('magenta')
+        cprint(f'Selected interface: {self.manager.chosen_interface.interface}   |   Mode: {self.manager.chosen_interface.mode}   |   MAC: {self.manager.chosen_interface.mac_address}','yellow')
+        self.print_colored_line('magenta')
+        print()
+        cprint("{: <5} {: <10} ".format("0.","Back to main menu"),'green')
+        cprint("{: <5} {: <10} ".format("1.","Set random address"),'green')
+        cprint("{: <5} {: <10} ".format("2.","Set custom address"),'green')
+        cprint("{: <5} {: <10} ".format("3.","Reset to original"),'green')
+        # cprint("{: <5} {: <10} ".format("4.","xxxxxxxx"),'green')
+        print()
+        self.print_colored_line('yellow')
 
     def print_banner(self):
         print()
@@ -73,6 +86,9 @@ class MenuHelper:
         self.print_colored_line("green")
         print()
         print()
+
+    def print_colored_line(self,color):  
+        cprint("--------------------------------------------------------------------------------------",color)
 
 def clean_last_line():
     print ("\033[A                                                                                      \033[A")
