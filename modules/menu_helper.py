@@ -1,15 +1,25 @@
 from termcolor import cprint,colored
+from .decorator import banner_decorator,base_menu
 import time
 import re
+
+
 class MenuHelper:
 
     def __init__(self,manager):
         self.manager = manager
-        self.last_printed = 1
+
+    @banner_decorator
+    @base_menu("blue")
+    def print_interfaces(self,interfaces):
+        table_prettifier(["",'PHY',"Interface","Driver","Chipset"])
+        print()
+        for interface in interfaces:
+            table_prettifier(interface.return_as_list())
+
 
     def read_option(self,option='option'):
         print(f"\nSelect {option}:\t",end="")
-        self.last_printed +=1
         while True:
             try:
                 selected_option = int(input())
@@ -30,7 +40,6 @@ class MenuHelper:
         valid_mac = r"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
         regex = re.compile(valid_mac)
         print(f"Custom MAC:\t",end="")
-        self.last_printed +=1
         while True:
             try:
                 selected_option = str(input())
@@ -44,21 +53,11 @@ class MenuHelper:
                 clean_last_line()
                 cprint(f"No valid input. Please enter a valid mac address","red")
                 print(f"Custom MAC:\t",end="")
-
-    def print_interfaces(self,interfaces):
-        self.clear_last_output()
-        self.print_colored_line("blue")
-        self.table_prettifier(["",'PHY',"Interface","Driver","Chipset"])
-        print()
-        self.last_printed +=1
-        for interface in interfaces:
-            self.table_prettifier(interface.return_as_list())
-        self.print_colored_line("blue")
     
 
+    @banner_decorator
+    @base_menu("yellow")
     def print_main_menu_options(self):
-        self.clear_last_output()
-        self.print_header("yellow")
         print()
         cprint("{: <5} {: <10} ".format("0.","Change interface"),'green')
         cprint("{: <5} {: <10} ".format("1.","Change mac-address"),'green')
@@ -66,62 +65,21 @@ class MenuHelper:
         cprint("{: <5} {: <10} ".format("3.","Put in managed mode"),'green')
         cprint("{: <5} {: <10} ".format("4.","Scan Networks"),'green')
         print()
-        self.last_printed += 7
-        self.print_colored_line('yellow')
 
+    @banner_decorator
+    @base_menu("magenta")
     def print_mac_changer_menu(self):
-        self.clear_last_output()
-        self.print_header("magenta")
         print()
         cprint("{: <5} {: <10} ".format("0.","Back to main menu"),'green')
         cprint("{: <5} {: <10} ".format("1.","Set random address"),'green')
         cprint("{: <5} {: <10} ".format("2.","Set custom address"),'green')
         cprint("{: <5} {: <10} ".format("3.","Reset to original"),'green')
         print()
-        self.last_printed +=6
-        self.print_colored_line('magenta')
-
-    def print_header(self,color):
-        self.print_colored_line(color)
-        cprint(f'Selected interface: {self.manager.chosen_interface.interface}   |   Mode: {self.manager.chosen_interface.mode}   |   MAC: {self.manager.chosen_interface.mac_address}',color)
-        self.last_printed += 1 
-        self.print_colored_line(color)
 
 
-    def print_banner(self):
-        print()
-        print()
-        cprint("--------------------------------------------------------------------------------------",'green')
-        cprint("'########::'########::::'###::::'##::::'##:'########:'##::::'##:'########:'########::","red")
-        cprint(" ##.... ##: ##.....::::'## ##::: ##:::: ##:... ##..:: ##:::: ##: ##.....:: ##.... ##:","red")
-        cprint(" ##:::: ##: ##::::::::'##:. ##:: ##:::: ##:::: ##:::: ##:::: ##: ##::::::: ##:::: ##:",'red')
-        cprint(" ########:: ######:::'##:::. ##: ##:::: ##:::: ##:::: #########: ######::: ########::",'red')
-        cprint(" ##.....::: ##...:::: #########: ##:::: ##:::: ##:::: ##.... ##: ##...:::: ##.. ##:::",'red')
-        cprint(" ##:::::::: ##::::::: ##.... ##: ##:::: ##:::: ##:::: ##:::: ##: ##::::::: ##::. ##::",'red')
-        cprint(" ##:::::::: ########: ##:::: ##:. #######::::: ##:::: ##:::: ##: ########: ##:::. ##:",'red')
-        cprint("..:::::::::........::..:::::..:::.......::::::..:::::..:::::..::........::..:::::..::",'red')
-        cprint("--------------------------------------------------------------------------------------",'green')
-        print(colored("--------------------------------- ",'green'),end='')
-        print(colored("coded by chikko80",'red'),end="")
-        cprint(" ----------------------------------",'green')
-        cprint("--------------------------------------------------------------------------------------",'green')
-        print()
-        print()
+def table_prettifier(row_as_list):
+    print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
 
-    def clear_last_output(self):
-        if self.last_printed ==1:
-            return
-        for _ in range(self.last_printed):
-            clean_last_line()
-        self.last_printed = 1
-
-    def print_colored_line(self,color):  
-        cprint("--------------------------------------------------------------------------------------",color)
-        self.last_printed +=1
-
-    def table_prettifier(self,row_as_list):
-        print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
-        self.last_printed +=1
 
 
 def clean_last_line():

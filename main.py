@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import os
 from termcolor import cprint,colored
 from modules.menu_helper import MenuHelper
@@ -8,13 +9,10 @@ menu_helper = MenuHelper(manager)
 
 
 def menu():
-    start()
     select_interface()
     main_menu()
     
 
-def start():    
-    menu_helper.print_banner()
 
 def select_interface():
     manager.read_interfaces()
