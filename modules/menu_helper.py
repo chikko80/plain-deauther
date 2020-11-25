@@ -1,5 +1,5 @@
 from termcolor import cprint,colored
-from .decorator import banner_decorator,base_menu
+from .decorator import base_menu
 import time
 import re
 
@@ -9,14 +9,12 @@ class MenuHelper:
     def __init__(self,manager):
         self.manager = manager
 
-    @banner_decorator
     @base_menu("blue")
     def print_interfaces(self,interfaces):
-        table_prettifier(["",'PHY',"Interface","Driver","Chipset"])
+        self.print_table_row(["",'PHY',"Interface","Driver","Chipset"])
         print()
         for interface in interfaces:
-            table_prettifier(interface.return_as_list())
-
+            self.print_table_row(interface.return_as_list())
 
     def read_option(self,option='option'):
         print(f"\nSelect {option}:\t",end="")
@@ -27,7 +25,7 @@ class MenuHelper:
                     if selected_option > len(self.manager.interfaces) or selected_option < 1:
                         raise ValueError
                 if option == "main_menu":
-                    if selected_option < 0 or selected_option > 4:
+                    if selected_option < 1 or selected_option > 5:
                         raise ValueError
                 return selected_option
             except ValueError:
@@ -55,31 +53,37 @@ class MenuHelper:
                 print(f"Custom MAC:\t",end="")
     
 
-    @banner_decorator
     @base_menu("yellow")
     def print_main_menu_options(self):
-        print()
-        cprint("{: <5} {: <10} ".format("0.","Change interface"),'green')
-        cprint("{: <5} {: <10} ".format("1.","Change mac-address"),'green')
-        cprint("{: <5} {: <10} ".format("2.","Put in monitor mode"),'green')
-        cprint("{: <5} {: <10} ".format("3.","Put in managed mode"),'green')
-        cprint("{: <5} {: <10} ".format("4.","Scan Networks"),'green')
-        print()
+        menu = [
+            "Change interface",
+            "Change mac-address",
+            "Put in monitor mode",
+            "Put in managed mode",
+            "Scan Networks",
+        ]
+        self.print_menu_options(menu)
 
-    @banner_decorator
+
     @base_menu("magenta")
     def print_mac_changer_menu(self):
+        menu = [
+            "Back to main menu",
+            "Set random address",
+            "Set custom address",
+            "Reset to original",
+        ]
+        self.print_menu_options(menu)
+
+    def print_menu_options(self,option_list,color="green"):
         print()
-        cprint("{: <5} {: <10} ".format("0.","Back to main menu"),'green')
-        cprint("{: <5} {: <10} ".format("1.","Set random address"),'green')
-        cprint("{: <5} {: <10} ".format("2.","Set custom address"),'green')
-        cprint("{: <5} {: <10} ".format("3.","Reset to original"),'green')
+        for index,option in enumerate(option_list):
+            cprint("{: <5} {: <10} ".format(f"{index+1}.",f"{option}"),color)
         print()
 
 
-def table_prettifier(row_as_list):
-    print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
-
+    def print_table_row(self,row_as_list):
+        print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
 
 
 def clean_last_line():

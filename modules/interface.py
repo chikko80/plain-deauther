@@ -8,6 +8,7 @@ class Interface:
         self.chipset = chipset
         self.mode = "Monitor" if "mon" in self.interface else "Managed"
         self.mac_address = None
+        self.state = None
 
     def __str__(self):
         return "Index: " + self.index + "\n" + "PHY: " + self.phy + "\n" +"Interface: " + self.interface + "\n" + "Driver: " + self.driver + "\n" +"Chipset: " + self.chipset + "\n" 
