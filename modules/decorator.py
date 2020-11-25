@@ -23,6 +23,8 @@ def __print_banner():
     print()
 
 def mobile_banner():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    [print() for _ in range(5)]
     print(
         """
 ,------.,------. ,---. ,--. ,--,--------,--.  ,--,------,------.  
