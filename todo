@@ -1,4 +1,7 @@
-airmon-ng check kill
+airmon-ng check kill 
 ctrl+c abbruch
 implement mobile version
 
+
+infos:
+from chipset until end 21 

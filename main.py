@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import sys
 from termcolor import cprint,colored
 from modules.menu_helper import MenuHelper
 from modules.manager import Manager
@@ -65,4 +66,8 @@ def main_menu():
         pass
 
 if __name__ == "__main__":
-    menu()
+    try:
+        menu()
+    except KeyboardInterrupt:
+        print()
+        sys.exit(0)
