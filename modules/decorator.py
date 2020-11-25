@@ -13,6 +13,7 @@ def base_menu(color):
                 print_colored_line = print_default_colored_line
 
             self = args[0]
+            clean_output()
             print_banner()
             print_colored_line(color)
             if not self.manager.chosen_interface:
@@ -51,7 +52,6 @@ def base_menu(color):
 
 
 def print_default_banner():
-    os.system('cls' if os.name == 'nt' else 'clear')
     [print() for _ in range(5)]
     cprint("--------------------------------------------------------------------------------------",'green')
     cprint("--------------------------------------------------------------------------------------",'green')
@@ -73,7 +73,6 @@ def print_default_banner():
 
 
 def print_mobile_banner():
-    os.system('cls' if os.name == 'nt' else 'clear')
     [print() for _ in range(5)]
     cprint("-----------------------------------------------------------------","green")
     cprint("-----------------------------------------------------------------","green")
@@ -94,6 +93,7 @@ def print_mobile_banner():
 
 def device_menu(func):
     def draw_start_banner(*args):
+        clean_output()
         print_mobile_colored_line('green')
         print_mobile_colored_line('green')
         cprint(
@@ -125,11 +125,5 @@ def print_default_colored_line(color):
 def print_mobile_colored_line(color):  
     cprint("-----------------------------------------------------------------",color)
 
-# def menu_outline_decorator(color):
-#     def function_wrapper(func):
-#         def draw_outlines(*args):
-#             print_colored_line(color)
-#             func(*args)
-#             print_colored_line(color)
-#         return draw_outlines
-#     return function_wrapper
+def clean_output():
+    os.system('cls' if os.name == 'nt' else 'clear')
