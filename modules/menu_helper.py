@@ -8,6 +8,10 @@ class MenuHelper:
 
     def __init__(self,manager):
         self.manager = manager
+        self.device_menu = [
+            "Desktop"
+            "Mobile"
+        ]
         self.main_menu = [
             "Change interface",
             "Change mac-address",
@@ -21,6 +25,10 @@ class MenuHelper:
             "Set custom address",
             "Reset to original",
         ]
+        
+    def print_device_menu(self):
+        cprint("Desktop or Mobile?","blue")
+        self.print_menu_options(self.device_menu)
 
     @base_menu("blue")
     def print_interfaces(self,interfaces):
@@ -42,6 +50,9 @@ class MenuHelper:
                         raise ValueError
                 if option == 'mac_changer':
                     if selected_option < 1 or selected_option > len(self.mac_changer_menu):
+                        raise ValueError
+                if option == 'device_menu':
+                    if selected_option < 1 or selected_option > len(self.device_menu):
                         raise ValueError
                 return selected_option
             except ValueError:
@@ -82,7 +93,6 @@ class MenuHelper:
         for index,option in enumerate(option_list):
             cprint("{: <5} {: <10} ".format(f"{index+1}.",f"{option}"),color)
         print()
-
 
     def print_table_row(self,row_as_list):
         print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
