@@ -12,8 +12,11 @@ class Manager:
         self.chosen_interface = None
               
     def read_interfaces(self):
+        # print("airmon")
         self.read_airmon_information()
+        # print("mac")
         self.read_mac_addresses()
+        # print("state")
         self.read_interface_state()
     
     def read_airmon_information(self):

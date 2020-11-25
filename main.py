@@ -3,7 +3,7 @@ import os
 from termcolor import cprint,colored
 from modules.menu_helper import MenuHelper
 from modules.manager import Manager
-from settings import MOBILE
+from settings import settings
 
 manager = Manager()
 menu_helper = MenuHelper(manager)
@@ -18,11 +18,9 @@ def select_device():
     menu_helper.print_device_menu()
     option = menu_helper.read_option(option='device_menu')
     if option == 1:
-        global MOBILE
-        MOBILE = True
+        settings.mobile = False
     else:
-        global MOBILE
-        MOBILE = False
+        settings.mobile = True
 
     
 def select_interface():

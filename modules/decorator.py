@@ -1,11 +1,11 @@
 import os
 from termcolor import cprint,colored
-from settings import MOBILE
+from settings import settings
 
 def base_menu(color):
     def function_wrapper(func):
         def draw_outlines(*args):
-            if MOBILE:
+            if settings.mobile:
                 print_banner = print_mobile_banner
                 print_colored_line = print_mobile_colored_line
             else:

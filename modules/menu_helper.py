@@ -2,6 +2,7 @@ from termcolor import cprint,colored
 from .decorator import base_menu
 import time
 import re
+from settings import settings
 
 
 class MenuHelper:
@@ -9,7 +10,7 @@ class MenuHelper:
     def __init__(self,manager):
         self.manager = manager
         self.device_menu = [
-            "Desktop"
+            "Desktop",
             "Mobile"
         ]
         self.main_menu = [
@@ -95,7 +96,11 @@ class MenuHelper:
         print()
 
     def print_table_row(self,row_as_list):
-        print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
+        if settings.mobile:
+
+            print("{: <5} {: <5} {: <10} {: <10} {: <20}".format(*row_as_list))
+        else:
+            print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
 
 
 def clean_last_line():
