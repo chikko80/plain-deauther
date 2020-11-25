@@ -63,6 +63,18 @@ class Manager:
                 return
         #TODO Errorhandling
 
+    def check_trouble(self):
+        output = os.popen("airmon-ng check").read()
+        if len(output.split("\n")) > 3:
+            output = output.replace(r"using 'airmon-ng check kill'","").replace('they will','they will maybe')
+            return True,output
+        else:
+            return False,output
+
+    def check_kill(self):
+        output = os.popen("airmon-ng check kill").read()
+
+
     def select_interface(self,option):
         index = option - 1 
         self.chosen_interface = self.interfaces[index]

@@ -27,17 +27,6 @@ class MenuHelper:
             "Reset to original",
         ]
 
-    @device_menu
-    def print_device_menu(self):
-        self.print_menu_options(self.device_menu)
-
-    @base_menu("blue")
-    def print_interfaces(self,interfaces):
-        self.print_table_row(["",'PHY',"Interface","Driver","Chipset"])
-        print()
-        for interface in interfaces:
-            self.print_table_row(interface.return_as_list())
-
     def read_option(self,option='option'):
         print(f"\nSelect {option}:\t",end="")
         while True:
@@ -53,6 +42,9 @@ class MenuHelper:
                     if selected_option < 1 or selected_option > len(self.mac_changer_menu):
                         raise ValueError
                 if option == 'device_menu':
+                    if selected_option < 1 or selected_option > len(self.device_menu):
+                        raise ValueError
+                if option == 'check_kill':
                     if selected_option < 1 or selected_option > len(self.device_menu):
                         raise ValueError
                 return selected_option
@@ -80,6 +72,16 @@ class MenuHelper:
                 cprint(f"No valid input. Please enter a valid mac address","red")
                 print(f"Custom MAC:\t",end="")
     
+    @device_menu
+    def print_device_menu(self):
+        self.print_menu_options(self.device_menu)
+
+    @base_menu("blue")
+    def print_interfaces(self,interfaces):
+        self.print_table_row(["",'PHY',"Interface","Driver","Chipset"])
+        print()
+        for interface in interfaces:
+            self.print_table_row(interface.return_as_list())
 
     @base_menu("yellow")
     def print_main_menu_options(self):
@@ -101,6 +103,23 @@ class MenuHelper:
             print("{: <5} {: <5} {: <10} {: <10} {: <20}".format(*row_as_list))
         else:
             print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
+
+    def yes_no_question(self,message,option="Yes/y - No/n"):
+        cprint(message,'yellow')
+        print(colored(f"{option}:\t",'red'),end="")
+        while True:
+            try:
+                selected_option = str(input()).lower()
+                if not (selected_option == "y" or selected_option =="n"):
+                    raise ValueError
+                if selected_option == 'y':
+                    return True
+                else:
+                    return False
+                return selected_option
+            except ValueError:
+                clean_last_line()
+                print(colored(f"{option}:\t",'red'),end="")
 
 
 def clean_last_line():

@@ -4,6 +4,7 @@ import sys
 from termcolor import cprint,colored
 from modules.menu_helper import MenuHelper
 from modules.manager import Manager
+from modules.decorator import clean_output
 from settings import settings
 
 manager = Manager()
@@ -57,6 +58,14 @@ def main_menu():
     elif option == 2:
         mac_changer_menu()        
     elif option == 3:
+        trouble,output = manager.check_trouble()
+        if trouble and output:
+            output = output + "Your other interfaces will probably lose their internet connection.."
+            yes = menu_helper.yes_no_question(output)
+            if yes:
+                cprint('Killing processes..','red')
+                manager.check_kill()
+                cprint('Done','green')
         manager.set_monitor_mode()
         main_menu()
     elif option == 4:
@@ -69,5 +78,6 @@ if __name__ == "__main__":
     try:
         menu()
     except KeyboardInterrupt:
+        # clean_output()
         print()
         sys.exit(0)
