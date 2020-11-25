@@ -73,7 +73,7 @@ def print_default_banner():
 
 
 def print_mobile_banner():
-    [print() for _ in range(5)]
+    [print() for _ in range(2)]
     cprint("-----------------------------------------------------------------","green")
     cprint("-----------------------------------------------------------------","green")
     cprint(
