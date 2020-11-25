@@ -8,6 +8,19 @@ class MenuHelper:
 
     def __init__(self,manager):
         self.manager = manager
+        self.main_menu = [
+            "Change interface",
+            "Change mac-address",
+            "Put in monitor mode",
+            "Put in managed mode",
+            "Scan Networks",
+        ]
+        self.mac_changer_menu = [
+            "Back to main menu",
+            "Set random address",
+            "Set custom address",
+            "Reset to original",
+        ]
 
     @base_menu("blue")
     def print_interfaces(self,interfaces):
@@ -25,13 +38,16 @@ class MenuHelper:
                     if selected_option > len(self.manager.interfaces) or selected_option < 1:
                         raise ValueError
                 if option == "main_menu":
-                    if selected_option < 1 or selected_option > 5:
+                    if selected_option < 1 or selected_option > len(self.main_menu):
+                        raise ValueError
+                if option == 'mac_changer':
+                    if selected_option < 1 or selected_option > len(self.mac_changer_menu):
                         raise ValueError
                 return selected_option
             except ValueError:
                 clean_last_line()
                 clean_last_line()
-                cprint(f"No valid input. Please select a valid {option}","red")
+                cprint(f"No valid input. Please select a valid option","red")
                 print(f"Select {option}:\t",end="")
 
     def read_mac_address(self):
@@ -41,7 +57,7 @@ class MenuHelper:
         while True:
             try:
                 selected_option = str(input())
-                if selected_option == "0":
+                if selected_option == "1":
                     return False
                 if not regex.match(selected_option):
                     raise ValueError
@@ -55,25 +71,11 @@ class MenuHelper:
 
     @base_menu("yellow")
     def print_main_menu_options(self):
-        menu = [
-            "Change interface",
-            "Change mac-address",
-            "Put in monitor mode",
-            "Put in managed mode",
-            "Scan Networks",
-        ]
-        self.print_menu_options(menu)
-
+        self.print_menu_options(self.main_menu)
 
     @base_menu("magenta")
     def print_mac_changer_menu(self):
-        menu = [
-            "Back to main menu",
-            "Set random address",
-            "Set custom address",
-            "Reset to original",
-        ]
-        self.print_menu_options(menu)
+        self.print_menu_options(self.mac_changer_menu)
 
     def print_menu_options(self,option_list,color="green"):
         print()

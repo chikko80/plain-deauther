@@ -32,7 +32,23 @@ def base_menu(color):
             if not self.manager.chosen_interface:
                 cprint('Please select an interface:','yellow')
             else:
-                cprint(f'Selected interface: {self.manager.chosen_interface.interface}   |   Mode: {self.manager.chosen_interface.mode}   |   MAC: {self.manager.chosen_interface.mac_address}',color)
+                menu_color = 'cyan'
+                interface_color = 'red'
+                mode_color = 'red'
+                mac_color = 'red'
+                state_color = 'red'
+                seperator = colored(" | ",menu_color)
+                si_label = colored('Selected interface: ',menu_color)
+                si = colored(f'{self.manager.chosen_interface.interface}',interface_color)
+                mode_label = colored('Mode: ',menu_color)
+                mode = colored(f'{self.manager.chosen_interface.mode}',mode_color)
+                mac_label = colored('MAC: ',menu_color)
+                mac = colored(f'{self.manager.chosen_interface.mac_address}',mac_color)
+                state_label = colored('State: ',menu_color)
+                state = colored(f'{self.manager.chosen_interface.state}',state_color)
+                print(f"{si_label}{si}{seperator}{mode_label}{mode}{seperator}{mac_label}{mac}{seperator}{state_label}{state}")
+                # clean line,otherwise their will be a new line because string is at line limit
+                print ("\033[A                                                                                      \033[A")
             __print_colored_line(color)
             func(*args)
             __print_colored_line(color)
