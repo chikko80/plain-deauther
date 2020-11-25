@@ -32,7 +32,7 @@ def base_menu(color):
                 mac = colored(f'{self.manager.chosen_interface.mac_address}',mac_color)
                 state_label = colored('State:',menu_color)
                 state = colored(f'{self.manager.chosen_interface.state}',state_color)
-                if MOBILE:
+                if settings.mobile:
                     interface = f"{si_label} {si}" 
                     mode = f"{mode_label} {mode}"
                     mac = f"{mac_label} {mac}"
@@ -40,7 +40,7 @@ def base_menu(color):
                     print("{: <50} {: <20} {: <20} ".format(interface,seperator,mode))
                     print("{: <50} {: <20} {: <20} ".format(mac,seperator,state))
                 else:
-                    print(f"{si_label}{si}{seperator}{mode_label}{mode}{seperator}{mac_label}{mac}{seperator}{state_label}{state}")
+                    print(f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}")
                     # clean line,otherwise their will be a new line because string is at line limit
                 print ("\033[A                                                                                      \033[A")
             print_colored_line(color)
@@ -92,6 +92,31 @@ def print_mobile_banner():
     cprint(" -----------------------",'green')
     print_mobile_colored_line("green")
 
+def device_menu(func):
+    def draw_start_banner(*args):
+        print_mobile_colored_line('green')
+        print_mobile_colored_line('green')
+        cprint(
+        """
+██████╗ ███████╗ █████╗ ██╗   ██╗████████╗██╗  ██╗███████╗██████╗ 
+██╔══██╗██╔════╝██╔══██╗██║   ██║╚══██╔══╝██║  ██║██╔════╝██╔══██╗
+██████╔╝█████╗  ███████║██║   ██║   ██║   ███████║█████╗  ██████╔╝
+██╔═══╝ ██╔══╝  ██╔══██║██║   ██║   ██║   ██╔══██║██╔══╝  ██╔══██╗
+██║     ███████╗██║  ██║╚██████╔╝   ██║   ██║  ██║███████╗██║  ██║
+╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+    ""","red",attrs=['blink']
+        )
+        print_mobile_colored_line("green")
+        print(colored("----------------------- ",'green'),end='')
+        print(colored("coded by chikko80",'red'),end="")
+        cprint(" -----------------------",'green')
+        print_mobile_colored_line("green")
+        print_mobile_colored_line('yellow')
+        cprint("Choose Version: ","blue")
+        print_mobile_colored_line('yellow')
+
+        func(*args)
+    return draw_start_banner
 
 
 def print_default_colored_line(color):  

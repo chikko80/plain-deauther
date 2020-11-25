@@ -1,5 +1,5 @@
 from termcolor import cprint,colored
-from .decorator import base_menu
+from .decorator import base_menu,device_menu
 import time
 import re
 from settings import settings
@@ -26,9 +26,9 @@ class MenuHelper:
             "Set custom address",
             "Reset to original",
         ]
-        
+
+    @device_menu
     def print_device_menu(self):
-        cprint("Desktop or Mobile?","blue")
         self.print_menu_options(self.device_menu)
 
     @base_menu("blue")
