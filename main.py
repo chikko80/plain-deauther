@@ -9,9 +9,25 @@ menu_helper = MenuHelper(manager)
 
 
 def menu():
-    select_interface()
-    main_menu()
+    # select_interface()
+    # main_menu()
+
+    mobile_banner()
     
+def mobile_banner():
+    print(
+        """
+,------.,------. ,---. ,--. ,--,--------,--.  ,--,------,------.  
+|  .--. |  .---'/  O  \|  | |  '--.  .--|  '--'  |  .---|  .--. ' 
+|  '--' |  `--,|  .-.  |  | |  |  |  |  |  .--.  |  `--,|  '--'.' 
+|  | --'|  `---|  | |  '  '-'  '  |  |  |  |  |  |  `---|  |\  \  
+`--'    `------`--' `--'`-----'   `--'  `--'  `--`------`--' '--' 
+_____ _____ _____ _____ _____ _____ _____ _____ 
+|  _  |   __|  _  |  |  |_   _|  |  |   __| __  |
+|   __|   __|     |  |  | | | |     |   __|    -|
+|__|  |_____|__|__|_____| |_| |__|__|_____|__|__|
+        """
+    )
 def select_interface():
     manager.read_interfaces()
     menu_helper.print_interfaces(manager.interfaces)

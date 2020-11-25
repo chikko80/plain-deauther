@@ -22,6 +22,15 @@ def __print_banner():
     print()
     print()
 
+def mobile_banner():
+    print(
+        """
+_____ _____ _____ _____ _____ _____ _____ _____ 
+|  _  |   __|  _  |  |  |_   _|  |  |   __| __  |
+|   __|   __|     |  |  | | | |     |   __|    -|
+|__|  |_____|__|__|_____| |_| |__|__|_____|__|__|
+        """
+    )
 
 def base_menu(color):
     def function_wrapper(func):
