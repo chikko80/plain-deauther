@@ -4,8 +4,6 @@ error handling if cant set in monitormode or no monitormode available after sett
 TODO:
 row in header on in mobile version one too much
 expand base menu for target router
-4. read 2,4ghz and 5,ghz
-    - iwlist {interface} freq
 
 5.Deauther 
 - Scan networks
@@ -22,6 +20,8 @@ from chipset until end 21
 
 Done:
 
+4. read 2,4ghz and 5,ghz
+    - iwlist {interface} freq
 error handling if cant set in monitormode or no monitormode available after setting
 airmon-ng check kill 
 ctrl+c abbruch

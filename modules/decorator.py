@@ -1,6 +1,6 @@
 import os
 from termcolor import cprint,colored
-from settings import settings
+# from settings import settings
 
 def base_menu(color):
     def function_wrapper(func):
@@ -124,6 +124,35 @@ def device_menu(func):
 
         func(*args)
     return draw_start_banner
+
+
+def scanner_menu(func):
+    def header(*args):
+        #! for testing
+        show_bssids = False
+        # First row: columns
+        cprint("   --------------------------------------------------------")
+        num = colored('   NUM')
+        essid = colored('                      ESSID')
+        if show_bssids:
+            bssid = colored('              BSSID')
+        else:
+            bssid = ""
+        #removed wps
+        rest = colored('   CH  ENCR  POWER  CLIENT')
+
+        # Second row: separator
+        sep = colored('   ---')
+        sep2 = colored('  -------------------------')
+        if show_bssids:
+            sep3 = colored('  -----------------')
+        else:
+            sep3 = ""
+        rest2 =  colored('  ---  ----  -----  ------')
+        print(f'{num}{essid}{bssid}{rest}')
+        print(f'{sep}{sep2}{sep3}{rest2}')
+        func(*args)
+    return header
 
 
 def print_default_colored_line(color):  

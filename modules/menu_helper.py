@@ -1,4 +1,4 @@
-from termcolor import cprint,colored
+from termcolor import colored,colored
 from .decorator import base_menu,device_menu
 import time
 import re
@@ -26,6 +26,12 @@ class MenuHelper:
             "Set custom address",
             "Reset to original",
         ]
+        self.deauther_menu = [
+            "Scan Networks",
+            "Set Channel (default channel-hopping)",
+            "Set band (default 2.4GHz + 5GHz)",
+            "Attack Networks",
+        ]
 
     def read_option(self,option='option'):
         print(f"\nSelect {option}:\t",end="")
@@ -51,7 +57,7 @@ class MenuHelper:
             except ValueError:
                 clean_last_line()
                 clean_last_line()
-                cprint(f"No valid input. Please select a valid option","red")
+                colored(f"No valid input. Please select a valid option","red")
                 print(f"Select {option}:\t",end="")
 
     def read_mac_address(self):
@@ -69,14 +75,14 @@ class MenuHelper:
             except ValueError:
                 clean_last_line()
                 clean_last_line()
-                cprint(f"No valid input. Please enter a valid mac address","red")
+                colored(f"No valid input. Please enter a valid mac address","red")
                 print(f"Custom MAC:\t",end="")
     
     @device_menu
     def print_device_menu(self):
         self.print_menu_options(self.device_menu)
 
-    @base_menu("blue")
+    @base_menu("cyan")
     def print_interfaces(self,interfaces):
         self.print_table_row(["",'PHY',"Interface","Driver","Chipset"])
         print()
@@ -90,11 +96,15 @@ class MenuHelper:
     @base_menu("magenta")
     def print_mac_changer_menu(self):
         self.print_menu_options(self.mac_changer_menu)
+    
+    @base_menu("blue")
+    def print_deauther_menu(self):
+        self.print_menu_options(self.deauther_menu)
 
     def print_menu_options(self,option_list,color="green"):
         print()
         for index,option in enumerate(option_list):
-            cprint("{: <5} {: <10} ".format(f"{index+1}.",f"{option}"),color)
+            colored("{: <5} {: <10} ".format(f"{index+1}.",f"{option}"),color)
         print()
 
     def print_table_row(self,row_as_list):
@@ -105,7 +115,7 @@ class MenuHelper:
             print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
 
     def yes_no_question(self,message,option="Yes/y - No/n"):
-        cprint(message,'yellow')
+        colored(message,'yellow')
         print(colored(f"{option}:\t",'red'),end="")
         while True:
             try:

@@ -1,4 +1,4 @@
-from termcolor import cprint
+from termcolor import colored
 from .interface import Interface
 from .menu_helper import clean_last_line
 import os
