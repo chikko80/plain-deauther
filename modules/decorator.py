@@ -24,6 +24,7 @@ def base_menu(color):
                 mode_color = 'red'
                 mac_color = 'red'
                 state_color = 'red'
+                band_color = 'red'
                 seperator = colored("|",menu_color)
                 si_label = colored('Selected interface:',menu_color)
                 si = colored(f'{self.manager.chosen_interface.interface}',interface_color)
@@ -33,17 +34,23 @@ def base_menu(color):
                 mac = colored(f'{self.manager.chosen_interface.mac_address}',mac_color)
                 state_label = colored('State:',menu_color)
                 state = colored(f'{self.manager.chosen_interface.state}',state_color)
+                band_label = colored('Supported Bands:',menu_color)
+                supported_bands = ", ".join(self.manager.chosen_interface.bands)
+                bands = colored(f'{supported_bands}',band_color)
                 if settings.mobile:
                     interface = f"{si_label} {si}" 
                     mode = f"{mode_label} {mode}"
                     mac = f"{mac_label} {mac}"
                     state = f"{state_label} {state}"
+                    bands = f'{band_label} {bands}'
                     print("{: <50} {: <20} {: <20} ".format(interface,seperator,mode))
                     print("{: <50} {: <20} {: <20} ".format(mac,seperator,state))
+                    print ("\033[A                                                                                      \033[A")
+                    print("{: <50}".format(bands))
                 else:
-                    print(f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}")
+                    print(f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands}")
                     # clean line,otherwise their will be a new line because string is at line limit
-                print ("\033[A                                                                                      \033[A")
+                # print ("\033[A                                                                                      \033[A")
             print_colored_line(color)
             func(*args)
             print_colored_line(color)

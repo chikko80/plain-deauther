@@ -2,7 +2,6 @@
 
 TODO:
 row in header on in mobile version one too much
-error handling if cant set in monitormode or no monitormode available after setting
 expand base menu for target router
 4. read 2,4ghz and 5,ghz
     - iwlist {interface} freq
@@ -22,6 +21,7 @@ from chipset until end 21
 
 Done:
 
+error handling if cant set in monitormode or no monitormode available after setting
 airmon-ng check kill 
 ctrl+c abbruch
 implement mobile version

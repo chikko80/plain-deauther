@@ -18,6 +18,7 @@ class Manager:
         self.read_mac_addresses()
         # print("state")
         self.read_interface_state()
+        self.read_supported_bands()
     
     def read_airmon_information(self):
         self.interfaces = []
@@ -49,6 +50,30 @@ class Manager:
         else:
             for interface in self.interfaces:
                 interface.state = os.popen(f"cat /sys/class/net/{interface.interface}/operstate").read()
+
+
+    def read_supported_bands(self,interface=None):
+        def check_supp(output,band):
+            for line in output.split("\n"):
+                if line.strip().startswith("Channel"):
+                    for col in line.split(":"):
+                        if col[1].startswith(band):
+                            return True
+            return False
+        def update_supported_bands(interface):
+            interface.bands = []
+            output = os.popen(f"iwlist {interface.interface} freq").read()
+            if check_supp(output,'2'):
+                interface.bands.append("2.4GHz")
+            if check_supp(output,'5'):
+                interface.bands.append("5GHz")
+
+        if interface:
+            update_supported_bands(interface)
+        else:
+            for interface in self.interfaces:
+                update_supported_bands(interface)
+
 
     def update_device_informations(self,mode):
         self.read_interfaces()
@@ -100,11 +125,11 @@ class Manager:
     #TODO check if up/down automatically
     def set_monitor_mode(self):
         os.popen(f"airmon-ng start {self.chosen_interface.interface}").read()
-        self.update_device_informations("monitor")
+        return self.update_device_informations("monitor")
         
     def set_managed_mode(self):
         os.popen(f"airmon-ng stop {self.chosen_interface.interface}").read()
-        self.update_device_informations("managed")
+        return self.update_device_informations("managed")
 
     def set_interface_down(self):
         os.popen(f"ifconfig {self.chosen_interface.interface} down").read()
