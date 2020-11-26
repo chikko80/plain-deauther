@@ -60,8 +60,8 @@ class Manager:
         for interface in self.interfaces:
             if target_mode == interface.interface:
                 self.chosen_interface = interface
-                return
-        #TODO Errorhandling
+                return True
+        return False 
 
     def check_trouble(self):
         output = os.popen("airmon-ng check").read()
@@ -111,9 +111,4 @@ class Manager:
 
     def set_interface_up(self):
         os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
-
-
-            
-
-        
     

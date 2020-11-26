@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import os
 import sys
+import time
 from termcolor import cprint,colored
 from modules.menu_helper import MenuHelper
 from modules.manager import Manager
@@ -66,7 +67,10 @@ def main_menu():
                 cprint('Killing processes..','red')
                 manager.check_kill()
                 cprint('Done','green')
-        manager.set_monitor_mode()
+        success = manager.set_monitor_mode()
+        if not success:
+            cprint(f"Couldn't put '{manager.chosen_interface.interface}' into monitor mode..")
+            time.sleep(2) 
         main_menu()
     elif option == 4:
         manager.set_managed_mode()
