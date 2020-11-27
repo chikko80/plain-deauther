@@ -1,11 +1,5 @@
 modules/__pycache__
 *.pyc
-__pycache__/settings.cpython-38.pyc
-modules/__pycache__/decorator.cpython-38.pyc
-modules/__pycache__/manager.cpython-38.pyc
-modules/__pycache__/menu_helper.cpython-38.pyc
-.vscode/.ropeproject/objectdb
-modules/__pycache__/decorator.cpython-38.pyc
-modules/__pycache__/interface.cpython-38.pyc
-modules/__pycache__/manager.cpython-38.pyc
-modules/__pycache__/menu_helper.cpython-38.pyc
+.vscode
+*.csv
+todo

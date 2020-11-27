@@ -12,7 +12,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "main.py",
+            "name": "main.py"
             "type": "python",
             "request": "launch",
             "program": "/root/plain-deauther/main.py",

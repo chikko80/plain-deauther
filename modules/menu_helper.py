@@ -30,7 +30,7 @@ class MenuHelper:
             "Scan Networks",
             "Set Channel (default channel-hopping)",
             "Set band (default 2.4GHz + 5GHz)",
-            "Attack Networks",
+            "Attack Network",
         ]
  
     def read_option(self,option='option'):

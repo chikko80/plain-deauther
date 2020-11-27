@@ -158,6 +158,7 @@ class Manager:
         if not self.scanner.targets:
             return False
         self.targets = self.scanner.targets
+        self.scanner.delete_old_file()
         return True
     
     def select_target(self,option):
