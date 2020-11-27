@@ -58,7 +58,7 @@ def deauther_menu():
     if option == 2:
         success = manager.start_scan()
         if not success:
-            return main_menu()
+            return deauther_menu()
         menu_helper.print_targets(manager.targets,final=True)
         option = menu_helper.read_option(option='target_menu')
         manager.select_target(option) 

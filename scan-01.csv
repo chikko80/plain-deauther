@@ -1,8 +1,5 @@
 
 BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
-A0:FF:70:99:FF:80, 2020-11-27 16:35:22, 2020-11-27 16:35:22, 104, 1733, WPA2, CCMP, PSK, -85,        2,        0,   0.  0.  0.  0,  13, Vodafone-FF74, 
-84:47:65:45:CB:8B, 2020-11-27 16:35:17, 2020-11-27 16:35:21, 100, 1733, WPA2, CCMP, PSK, -82,        3,        0,   0.  0.  0.  0,  11, WLAN-S9CLHW, 
-D4:21:22:77:93:4D, 2020-11-27 16:35:19, 2020-11-27 16:35:19, 52, 1170, WPA2, CCMP, PSK, -66,        2,        0,   0.  0.  0.  0,  11, WLAN-924599, 
 
 Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
 

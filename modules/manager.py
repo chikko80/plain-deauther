@@ -155,6 +155,8 @@ class Manager:
                 return False
         self.scanner = Scanner(self.chosen_interface)
         self.scanner.start_scan()
+        if not self.scanner.targets:
+            return False
         self.targets = self.scanner.targets
         return True
     

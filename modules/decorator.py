@@ -40,9 +40,8 @@ def base_menu(color):
                 band_label = colored('Supported Bands:',menu_color)
                 supported_bands = ", ".join(self.manager.chosen_interface.bands)
                 bands = colored(f'{supported_bands}',band_color)
-                channel_label = colored('Channel:',menu_color)
-                ap_channel_label = colored('APChannel:',menu_color)
                 if self.manager.chosen_interface.chosen_channel:
+                    channel_label = colored('Channel:',menu_color)
                     ichannel = colored(f'{self.manager.chosen_interface.chosen_channel}',channel_color)
                 if self.manager.chosen_interface.chosen_band:
                     cband_label = colored('Selected Band:',menu_color)
@@ -53,6 +52,7 @@ def base_menu(color):
                 if self.manager.chosen_target:
                     target_label = colored('Target AP:',menu_color)
                     target = colored(f'{self.manager.chosen_target.essid if self.manager.chosen_target.essid else self.manager.chosen_target.bssid}',target_color)
+                    tchannel_label = colored('APChannel:',menu_color)
                     target_channel = colored(f'{self.manager.chosen_target.channel}',target_color)
                 if settings.mobile:
                     interface = f"{si_label} {si}" 
@@ -60,10 +60,27 @@ def base_menu(color):
                     mac = f"{mac_label} {mac}"
                     state = f"{state_label} {state}"
                     bands = f'{band_label} {bands}'
+
+                    if self.manager.chosen_interface.chosen_channel:
+                        ichannel = f'{channel_label} {ichannel}'
+                    else: ichannel = ''
+                    if self.manager.chosen_interface.chosen_band:
+                        cband = f'{cband_label} {cband}'
+                    else: cband = ''
+                    if self.manager.chosen_target:
+                        target = f'{target_label} {target}'
+                        tchannel = f'{tchannel_label} {target_channel}'
+                    else:
+                        target = ''
+                        tchannel = ''
                     print("{: <50} {: <20} {: <20} ".format(interface,seperator,mode))
                     print("{: <50} {: <20} {: <20} ".format(mac,seperator,state))
-                    print ("\033[A                                                                                      \033[A")
+                    print ("\033[A                                                                                     \033[A")
                     print("{: <50}".format(bands))
+                    if ichannel or cband:
+                        print("{: <50} {: <20} {: <20} ".format(ichannel,seperator,cband))
+                    if target or tchannel:
+                        print("{: <50} {: <20} {: <20} ".format(target,seperator,tchannel))
                 else:
                     header_string = f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands}"
                     if self.manager.chosen_interface.chosen_channel:
@@ -73,7 +90,7 @@ def base_menu(color):
                         chosen_band_string = f' {seperator} {cband_label} {cband}' 
                         header_string += chosen_band_string
                     if self.manager.chosen_target:
-                        target_string = f' {seperator} {target_label} {target} {seperator} {ap_channel_label} {target_channel}'
+                        target_string = f' {seperator} {target_label} {target} {seperator} {tchannel_label} {target_channel}'
                         header_string += target_string
                     print(header_string)
                         
