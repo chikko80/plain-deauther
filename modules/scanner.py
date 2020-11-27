@@ -4,7 +4,8 @@ import os
 import time
 import os.path
 
-from modules.deauther_models import Client,Target
+from modules.models.client import Client
+from modules.models.target import Target
 from modules.menu_helper import MenuHelper
 print_targets = MenuHelper.print_targets
 

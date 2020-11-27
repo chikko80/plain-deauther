@@ -1,5 +1,5 @@
 from termcolor import colored,cprint
-from .decorator import base_menu,device_menu,scanner_menu
+from .decorator import base_menu,os_menu,scanner_menu
 import time
 import re
 from settings import settings
@@ -33,6 +33,7 @@ class MenuHelper:
             "Attack Network",
         ]
  
+
     def read_option(self,option='option'):
         print(f"\nSelect {option}:\t",end="")
         while True:
@@ -81,7 +82,7 @@ class MenuHelper:
                 cprint(f"No valid input. Please enter a valid mac address","red")
                 print(f"Custom MAC:\t",end="")
     
-    @device_menu
+    @os_menu
     def print_device_menu(self):
         self.print_menu_options(self.device_menu)
 
@@ -128,7 +129,6 @@ class MenuHelper:
         
     def print_table_row(self,row_as_list):
         if settings.mobile:
-
             print("{: <5} {: <5} {: <10} {: <10} {: <20}".format(*row_as_list))
         else:
             print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))

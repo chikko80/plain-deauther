@@ -1,10 +1,8 @@
-from termcolor import colored
 from .interface import Interface
-from .menu_helper import clean_last_line,print_message
+from .menu_helper import print_message
 from modules.scanner import Scanner
 import os
 import re
-import time
 
 class Manager:
 
@@ -16,11 +14,8 @@ class Manager:
         self.scanner = None
 
     def read_interfaces(self):
-        # print("airmon")
         self.read_airmon_information()
-        # print("mac")
         self.read_mac_addresses()
-        # print("state")
         self.read_interface_state()
         self.read_supported_bands_and_channels()
     
@@ -93,6 +88,12 @@ class Manager:
                 self.chosen_interface = interface
                 return True
         return False 
+    
+    def in_monitor_mode(self):
+        if "mon" in self.chosen_interface.interface:
+            print_message("Interface is already in monitor mode..","yellow")
+            return True
+        return False
 
     def check_trouble(self):
         output = os.popen("airmon-ng check").read()
@@ -103,7 +104,9 @@ class Manager:
             return False,output
 
     def check_kill(self):
-        output = os.popen("airmon-ng check kill").read()
+        print_message('Killing processes..','red')
+        os.popen("airmon-ng check kill").read()
+        print_message('Done','green')
 
 
     def select_interface(self,option):
@@ -128,7 +131,6 @@ class Manager:
         self.set_interface_up()
         self.read_mac_addresses(update_current=True)
 
-    #TODO check if up/down automatically
     def set_monitor_mode(self):
         os.popen(f"airmon-ng start {self.chosen_interface.interface}").read()
         success =  self.update_device_informations("monitor")

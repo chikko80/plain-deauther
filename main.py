@@ -2,7 +2,6 @@
 import os
 import sys
 import time
-from termcolor import colored,cprint
 from modules.menu_helper import MenuHelper
 from modules.manager import Manager
 from modules.decorator import clean_output
@@ -83,18 +82,14 @@ def main_menu():
     elif option == 2:
         return mac_changer_menu()        
     elif option == 3:
-        if "mon" in manager.chosen_interface.interface:
-            cprint("Interface is already in monitor mode..","yellow")
-            time.sleep(1)
+        if manager.in_monitor_mode():
             return main_menu()
         trouble,output = manager.check_trouble()
         if trouble and output:
             output = output + "Your other interfaces will probably lose their internet connection.."
             yes = menu_helper.yes_no_question(output)
             if yes:
-                cprint('Killing processes..','red')
                 manager.check_kill()
-                cprint('Done','green')
         manager.set_monitor_mode()
         return main_menu()
     elif option == 4:

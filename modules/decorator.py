@@ -19,48 +19,41 @@ def base_menu(color):
             if not self.manager.chosen_interface:
                 cprint('Please select an interface:','yellow')
             else:
-                menu_color = 'cyan'
-                interface_color = 'red'
-                mode_color = 'red'
-                mac_color = 'red'
-                state_color = 'red'
-                band_color = 'red'
-                channel_color = 'red'
-                band_color = 'red'
-                target_color = 'red'
-                seperator = colored("|",menu_color)
-                si_label = colored('Selected interface:',menu_color)
-                si = colored(f'{self.manager.chosen_interface.interface}',interface_color)
-                mode_label = colored('Mode:',menu_color)
-                mode = colored(f'{self.manager.chosen_interface.mode}',mode_color)
-                mac_label = colored('MAC:',menu_color)
-                mac = colored(f'{self.manager.chosen_interface.mac_address}',mac_color)
-                state_label = colored('State:',menu_color)
-                state = colored(f'{self.manager.chosen_interface.state}',state_color)
-                band_label = colored('Supported Bands:',menu_color)
+                def colorize_menu_part(s):
+                    return colored(s,'cyan')
+                interface_color = mode_color = mac_color = state_color = band_color = channel_color = target_color = 'red'
+                seperator = colorize_menu_part("|")
+                si_label = colorize_menu_part('Selected interface:')
+                si = colored(self.manager.chosen_interface.interface,interface_color)
+                mode_label = colorize_menu_part("Mode:")
+                mode = colored(self.manager.chosen_interface.mode,mode_color)
+                mac_label = colorize_menu_part('MAC:')
+                mac = colored(self.manager.chosen_interface.mac_address,mac_color)
+                state_label = colorize_menu_part("State:")
+                state = colored(self.manager.chosen_interface.state,state_color)
+                band_label = colorize_menu_part("Supported Bands:")
                 supported_bands = ", ".join(self.manager.chosen_interface.bands)
-                bands = colored(f'{supported_bands}',band_color)
+                bands = colored(supported_bands,band_color)
                 if self.manager.chosen_interface.chosen_channel:
-                    channel_label = colored('Channel:',menu_color)
-                    ichannel = colored(f'{self.manager.chosen_interface.chosen_channel}',channel_color)
+                    channel_label = colorize_menu_part("Channel:")
+                    ichannel = colored(self.manager.chosen_interface.chosen_channel,channel_color)
                 if self.manager.chosen_interface.chosen_band:
-                    cband_label = colored('Selected Band:',menu_color)
+                    cband_label = colorize_menu_part("Selected Band:")
                     if self.manager.chosen_interface.chosen_band == 'a':
                         cband = colored('5GHz',band_color)
                     else:
                         cband = colored('2.4GHz',band_color)
                 if self.manager.chosen_target:
-                    target_label = colored('Target AP:',menu_color)
+                    target_label = colorize_menu_part("Target AP:")
                     target = colored(f'{self.manager.chosen_target.essid if self.manager.chosen_target.essid else self.manager.chosen_target.bssid}',target_color)
-                    tchannel_label = colored('APChannel:',menu_color)
-                    target_channel = colored(f'{self.manager.chosen_target.channel}',target_color)
+                    tchannel_label = colorize_menu_part("APChannel:")
+                    target_channel = colored(self.manager.chosen_target.channel,target_color)
                 if settings.mobile:
                     interface = f"{si_label} {si}" 
                     mode = f"{mode_label} {mode}"
                     mac = f"{mac_label} {mac}"
                     state = f"{state_label} {state}"
                     bands = f'{band_label} {bands}'
-
                     if self.manager.chosen_interface.chosen_channel:
                         ichannel = f'{channel_label} {ichannel}'
                     else: ichannel = ''
@@ -107,29 +100,33 @@ def base_menu(color):
 
 def print_default_banner():
     [print() for _ in range(5)]
-    cprint("--------------------------------------------------------------------------------------",'green')
-    cprint("--------------------------------------------------------------------------------------",'green')
-    cprint("'########::'########::::'###::::'##::::'##:'########:'##::::'##:'########:'########::","red")
-    cprint(" ##.... ##: ##.....::::'## ##::: ##:::: ##:... ##..:: ##:::: ##: ##.....:: ##.... ##:","red")
-    cprint(" ##:::: ##: ##::::::::'##:. ##:: ##:::: ##:::: ##:::: ##:::: ##: ##::::::: ##:::: ##:",'red')
-    cprint(" ########:: ######:::'##:::. ##: ##:::: ##:::: ##:::: #########: ######::: ########::",'red')
-    cprint(" ##.....::: ##...:::: #########: ##:::: ##:::: ##:::: ##.... ##: ##...:::: ##.. ##:::",'red')
-    cprint(" ##:::::::: ##::::::: ##.... ##: ##:::: ##:::: ##:::: ##:::: ##: ##::::::: ##::. ##::",'red')
-    cprint(" ##:::::::: ########: ##:::: ##:. #######::::: ##:::: ##:::: ##: ########: ##:::. ##:",'red')
-    cprint("..:::::::::........::..:::::..:::.......::::::..:::::..:::::..::........::..:::::..::",'red')
-    cprint("--------------------------------------------------------------------------------------",'green')
+    print_default_colored_line('green')
+    print_default_colored_line('green')
+    cprint(
+    """
+'########::'########::::'###::::'##::::'##:'########:'##::::'##:'########:'########::
+ ##.... ##: ##.....::::'## ##::: ##:::: ##:... ##..:: ##:::: ##: ##.....:: ##.... ##:
+ ##:::: ##: ##::::::::'##:. ##:: ##:::: ##:::: ##:::: ##:::: ##: ##::::::: ##:::: ##:
+ ########:: ######:::'##:::. ##: ##:::: ##:::: ##:::: #########: ######::: ########::
+ ##.....::: ##...:::: #########: ##:::: ##:::: ##:::: ##.... ##: ##...:::: ##.. ##:::
+ ##:::::::: ##::::::: ##.... ##: ##:::: ##:::: ##:::: ##:::: ##: ##::::::: ##::. ##::
+ ##:::::::: ########: ##:::: ##:. #######::::: ##:::: ##:::: ##: ########: ##:::. ##:
+..:::::::::........::..:::::..:::.......::::::..:::::..:::::..::........::..:::::..::
+    """
+    ,'red')
+    print_default_colored_line('green')
     print(colored("--------------------------------- ",'green'),end='')
     print(colored("coded by chikko80",'red'),end="")
     cprint(" ----------------------------------",'green')
-    cprint("--------------------------------------------------------------------------------------",'green')
+    print_default_colored_line('green')
     print()
     print()
 
 
 def print_mobile_banner():
     [print() for _ in range(2)]
-    cprint("-----------------------------------------------------------------","green")
-    cprint("-----------------------------------------------------------------","green")
+    print_mobile_colored_line("green")
+    print_mobile_colored_line("green")
     cprint(
         """
 ,------.,------. ,---. ,--. ,--,--------,--.  ,--,------,------.  
@@ -145,7 +142,7 @@ def print_mobile_banner():
     cprint(" -----------------------",'green')
     print_mobile_colored_line("green")
 
-def device_menu(func):
+def os_menu(func):
     def draw_start_banner(*args):
         clean_output()
         print_mobile_colored_line('green')
