@@ -76,9 +76,11 @@ def base_menu(color):
                     print("{: <50} {: <20} {: <20} ".format(interface,seperator,mode))
                     print("{: <50} {: <20} {: <20} ".format(mac,seperator,state))
                     print ("\033[A                                                                                     \033[A")
-                    print("{: <50}".format(bands))
-                    if ichannel or cband:
-                        print("{: <50} {: <20} {: <20} ".format(ichannel,seperator,cband))
+                    print("{: <50} {: <20}".format(bands,seperator))
+                    if ichannel:
+                        print("{: <50} {: <20}".format(ichannel,seperator))
+                    if cband:
+                        print("{: <50} {: <20}".format(cband,seperator))
                     if target or tchannel:
                         print("{: <50} {: <20} {: <20} ".format(target,seperator,tchannel))
                 else:
