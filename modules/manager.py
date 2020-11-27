@@ -1,6 +1,6 @@
 from termcolor import colored
 from .interface import Interface
-from .menu_helper import clean_last_line
+from .menu_helper import clean_last_line,print_message
 from modules.scanner import Scanner
 import os
 import re
@@ -13,6 +13,7 @@ class Manager:
         self.chosen_interface = None
         self.targets = []
         self.chosen_target = None
+        self.scanner = None
 
     def read_interfaces(self):
         # print("airmon")
@@ -21,7 +22,7 @@ class Manager:
         self.read_mac_addresses()
         # print("state")
         self.read_interface_state()
-        self.read_supported_bands()
+        self.read_supported_bands_and_channels()
     
     def read_airmon_information(self):
         self.interfaces = []
@@ -55,27 +56,29 @@ class Manager:
                 interface.state = os.popen(f"cat /sys/class/net/{interface.interface}/operstate").read()
 
 
-    def read_supported_bands(self,interface=None):
-        def check_supp(output,band):
+    def read_supported_bands_and_channels(self,interface=None):
+        def check_supp(interface): 
+            output = os.popen(f"iwlist {interface.interface} freq").read()
+            interface.bands = []
+            interface.channels = []
             for line in output.split("\n"):
                 if line.strip().startswith("Channel"):
                     for col in line.split(":"):
-                        if col[1].startswith(band):
-                            return True
-            return False
-        def update_supported_bands(interface):
-            interface.bands = []
-            output = os.popen(f"iwlist {interface.interface} freq").read()
-            if check_supp(output,'2'):
-                interface.bands.append("2.4GHz")
-            if check_supp(output,'5'):
-                interface.bands.append("5GHz")
-
+                        channel = col[0].split(' ')[1]
+                        if channel.startswith("0"): 
+                            channel = channel[1:]
+                        interface.channels.append(channel)
+                        if col[1].startswith("2") and "2.4GHz" not in interface.bands :
+                            interface.bands.append("2.4GHz")
+                            continue
+                        if col[1].startswith("5") and "5GHz" not in interface.bands:
+                            interface.bands.append("5GHz")
+                            continue
         if interface:
-            update_supported_bands(interface)
+            check_supp(interface)
         else:
             for interface in self.interfaces:
-                update_supported_bands(interface)
+                check_supp(interface)
 
 
     def update_device_informations(self,mode):
@@ -128,7 +131,11 @@ class Manager:
     #TODO check if up/down automatically
     def set_monitor_mode(self):
         os.popen(f"airmon-ng start {self.chosen_interface.interface}").read()
-        return self.update_device_informations("monitor")
+        success =  self.update_device_informations("monitor")
+        if not success:
+            print_message(f"Couldn't put '{self.chosen_interface.interface}' into monitor mode..")
+            return False
+        return True
         
     def set_managed_mode(self):
         os.popen(f"airmon-ng stop {self.chosen_interface.interface}").read()
@@ -141,9 +148,32 @@ class Manager:
         os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
     
     def start_scan(self):
-        scanner = Scanner(self.chosen_interface)
-        self.targets = scanner.start_scan()
+        if self.chosen_interface.mode != "Monitor":
+            print_message("Interface not in monitor mode! Putting into monitor mode automatically..",'yellow')
+            success =  self.set_monitor_mode()
+            if not success:
+                return False
+        self.scanner = Scanner(self.chosen_interface)
+        self.scanner.start_scan()
+        self.targets = self.scanner.targets
+        return True
     
     def select_target(self,option):
-        self.chosen_target = self.targets[len(self.targets)-1]
+        self.chosen_target = self.targets[option-1]
 
+    def select_band(self,option):
+        self.chosen_target = None
+        self.chosen_interface.chosen_channel = None
+        if option == 0:
+            self.chosen_interface.chosen_band = None
+        if option == True:
+            self.chosen_interface.chosen_band = "bg" 
+        if option == False:
+            self.chosen_interface.chosen_band = "a" 
+
+    def select_channel(self,option):
+        self.chosen_target = None
+        self.chosen_interface.chosen_band = None
+        if option == 0:
+            self.chosen_interface.chosen_channel = None
+        self.chosen_interface.chosen_channel = str(option)

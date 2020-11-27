@@ -31,7 +31,7 @@ class Scanner:
         elif self.interface.chosen_band:
             command.extend(["--band",str(self.interface.chosen_band)])
         else:
-            command.extend(["--band","abg"])
+            command.extend(["--band",str("abg")])
 
         joined = " ".join(command) 
         self.delete_old_file()
@@ -49,7 +49,8 @@ class Scanner:
 
                 time.sleep(1)
         except KeyboardInterrupt:
-            return self.targets
+            pass
+            # return self.targets
 
     def file_exists(self):
         return os.path.isfile(self.filepath) 

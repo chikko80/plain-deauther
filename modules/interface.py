@@ -11,6 +11,7 @@ class Interface:
         self.state = None
         self.bands = []
         self.chosen_band = None
+        self.channels = None
         self.chosen_channel = None
 
     def __str__(self):

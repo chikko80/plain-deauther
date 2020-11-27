@@ -17,7 +17,7 @@ class MenuHelper:
             "Change mac-address",
             "Put in monitor mode",
             "Put in managed mode",
-            "Scan Networks",
+            "Deauther",
         ]
         self.mac_changer_menu = [
             "Back to main menu",
@@ -31,7 +31,7 @@ class MenuHelper:
             "Set band (default 2.4GHz + 5GHz)",
             "Attack Networks",
         ]
-
+ 
     def read_option(self,option='option'):
         print(f"\nSelect {option}:\t",end="")
         while True:
@@ -51,6 +51,9 @@ class MenuHelper:
                         raise ValueError
                 if option == 'target_menu':
                     if selected_option < 1 or selected_option > len(self.manager.targets):
+                        raise ValueError
+                if option == 'channel (0 for channel-hopping)':
+                    if selected_option < 1 or selected_option > len(self.manager.chosen_interface.channels):
                         raise ValueError
                 return selected_option
             except ValueError:
@@ -108,15 +111,19 @@ class MenuHelper:
     
     @staticmethod
     @scanner_menu
-    def print_targets(targets):
+    def print_targets(targets,final=False):
         if targets:
             for index,target in enumerate(targets,start=1):
                 print(colored(str(index).rjust(5)),target.to_str())
             cprint("   --------------------------------------------------------")
             total_count = colored(str(len(targets)),'yellow')
             total_string = colored(f'Total: {total_count}','blue')
-            info_string = colored('If you found your target exit with Ctrl+C','red')
-            print(f'    {total_string} {info_string}')
+            pipe = colored(" | ",'red')
+            if final:
+                info_string = colored('Please select your target device by number','green')
+            else:
+                info_string = colored('If you found your target exit with Ctrl+C','red')
+            print(f'    {total_string}{pipe}{info_string}')
         
     def print_table_row(self,row_as_list):
         if settings.mobile:
@@ -125,15 +132,24 @@ class MenuHelper:
         else:
             print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
 
-    def yes_no_question(self,message,option="Yes/y - No/n"):
+    def yes_no_question(self,message,option=["Yes/y","No/n"]):
         cprint(message,'yellow')
-        print(colored(f"{option}:\t",'red'),end="")
+        printed_option = " - ".join(option)
+        print(colored(f"{printed_option}:\t",'red'),end="")
+        def get_options(option):
+            yes = option[0].split('/')[1]
+            no = option[1].split('/')[1]
+            return yes,no
+        yes,no = get_options(option)
+
         while True:
             try:
                 selected_option = str(input()).lower()
-                if not (selected_option == "y" or selected_option =="n"):
+                if selected_option == 0:
+                    return selected_option
+                if not (selected_option == yes or selected_option ==no):
                     raise ValueError
-                if selected_option == 'y':
+                if selected_option == yes:
                     return True
                 else:
                     return False
@@ -141,6 +157,10 @@ class MenuHelper:
             except ValueError:
                 clean_last_line()
                 print(colored(f"{option}:\t",'red'),end="")
+
+def print_message(message,color,time_delay=2):
+    cprint(message,color)
+    time.sleep(time_delay)
 
 
 def clean_last_line():

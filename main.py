@@ -50,6 +50,28 @@ def mac_changer_menu():
         manager.reset_mac_address()
         return main_menu()
 
+def deauther_menu():
+    menu_helper.print_deauther_menu()
+    option = menu_helper.read_option(option="deauther_menu")
+    if option == 1:
+        success = manager.start_scan()
+        if not success:
+            return main_menu()
+        menu_helper.print_targets(manager.targets,final=True)
+        option = menu_helper.read_option(option='target_menu')
+        manager.select_target(option) 
+        return deauther_menu()
+    elif option == 2:
+        option = menu_helper.read_option(option='channel (0 for channel-hopping)')
+        manager.select_channel(option) 
+        return deauther_menu()
+    elif option == 3:
+        option = menu_helper.yes_no_question("Select a band (0 for default) ",option=["2.4GHz/2","5GHz/5"])
+        manager.select_band(option)
+        return deauther_menu()
+    elif option == 4:
+        pass
+
 def main_menu():
     menu_helper.print_main_menu_options()
     option = menu_helper.read_option(option="main_menu")
@@ -57,7 +79,7 @@ def main_menu():
         select_interface()
         return main_menu()
     elif option == 2:
-        mac_changer_menu()        
+        return mac_changer_menu()        
     elif option == 3:
         if "mon" in manager.chosen_interface.interface:
             cprint("Interface is already in monitor mode..","yellow")
@@ -71,34 +93,13 @@ def main_menu():
                 cprint('Killing processes..','red')
                 manager.check_kill()
                 cprint('Done','green')
-        success = manager.set_monitor_mode()
-        if not success:
-            cprint(f"Couldn't put '{manager.chosen_interface.interface}' into monitor mode..")
-            time.sleep(2) 
+        manager.set_monitor_mode()
         return main_menu()
     elif option == 4:
         manager.set_managed_mode()
         return main_menu()
     elif option == 5:
-        menu_helper.print_deauther_menu()
-        option = menu_helper.read_option(option="deauther_menu")
-        if option == 1:
-            manager.start_scan()
-            menu_helper.print_targets(manager.targets)
-            option = menu_helper.read_option(option='target_menu')
-            manager.select_target(option) 
-            print(manager.chosen_target)
-            return main_menu()
-        elif option == 2:
-            pass
-        elif option == 3:
-            pass
-        elif option == 4:
-            pass
-        elif option == 5:
-            pass
-        elif option == 6:
-            pass
+        return deauther_menu()
 
 
 if __name__ == "__main__":
