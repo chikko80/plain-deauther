@@ -25,6 +25,7 @@ def base_menu(color):
                 mac_color = 'red'
                 state_color = 'red'
                 band_color = 'red'
+                target_color = 'red'
                 seperator = colored("|",menu_color)
                 si_label = colored('Selected interface:',menu_color)
                 si = colored(f'{self.manager.chosen_interface.interface}',interface_color)
@@ -37,6 +38,11 @@ def base_menu(color):
                 band_label = colored('Supported Bands:',menu_color)
                 supported_bands = ", ".join(self.manager.chosen_interface.bands)
                 bands = colored(f'{supported_bands}',band_color)
+                if self.manager.chosen_target:
+                    target_label = colored('Target AP:',menu_color)
+                    target = colored(f'{self.manager.chosen_target.essid if self.manager.chosen_target.essid else self.manager.chosen_target.bssid}',target_color)
+                    target_clabel = colored('Channel: ',menu_color)
+                    target_channel = colored(f'{self.manager.chosen_target.channel}',target_color)
                 if settings.mobile:
                     interface = f"{si_label} {si}" 
                     mode = f"{mode_label} {mode}"
@@ -48,7 +54,10 @@ def base_menu(color):
                     print ("\033[A                                                                                      \033[A")
                     print("{: <50}".format(bands))
                 else:
-                    print(f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands}")
+                    if self.manager.chosen_target:
+                        print(f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands}{seperator} {target_label} {target} {seperator} {target_clabel} {target_channel}")
+                    else:
+                        print(f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands}")
                     # clean line,otherwise their will be a new line because string is at line limit
                 # print ("\033[A                                                                                      \033[A")
             print_colored_line(color)

@@ -36,29 +36,33 @@ def mac_changer_menu():
     menu_helper.print_mac_changer_menu() 
     option = menu_helper.read_option(option="mac_changer")
     if option == 1:
-        main_menu()
+        return main_menu()
     elif option == 2:
         manager.set_random_mac_address()
-        main_menu()
+        return main_menu()
     elif option == 3:
         input_address = menu_helper.read_mac_address()
         if not input_address:
             return main_menu()
         manager.set_custom_mac_address(input_address)
-        main_menu()
+        return main_menu()
     elif option == 4:
         manager.reset_mac_address()
-        main_menu()
+        return main_menu()
 
 def main_menu():
     menu_helper.print_main_menu_options()
     option = menu_helper.read_option(option="main_menu")
     if option == 1:
         select_interface()
-        main_menu()
+        return main_menu()
     elif option == 2:
         mac_changer_menu()        
     elif option == 3:
+        if "mon" in manager.chosen_interface.interface:
+            cprint("Interface is already in monitor mode..","yellow")
+            time.sleep(1)
+            return main_menu()
         trouble,output = manager.check_trouble()
         if trouble and output:
             output = output + "Your other interfaces will probably lose their internet connection.."
@@ -71,10 +75,10 @@ def main_menu():
         if not success:
             cprint(f"Couldn't put '{manager.chosen_interface.interface}' into monitor mode..")
             time.sleep(2) 
-        main_menu()
+        return main_menu()
     elif option == 4:
         manager.set_managed_mode()
-        main_menu()
+        return main_menu()
     elif option == 5:
         menu_helper.print_deauther_menu()
         option = menu_helper.read_option(option="deauther_menu")
@@ -84,7 +88,7 @@ def main_menu():
             option = menu_helper.read_option(option='target_menu')
             manager.select_target(option) 
             print(manager.chosen_target)
-            main_menu()
+            return main_menu()
         elif option == 2:
             pass
         elif option == 3:
@@ -95,7 +99,6 @@ def main_menu():
             pass
         elif option == 6:
             pass
-        main_menu()
 
 
 if __name__ == "__main__":
