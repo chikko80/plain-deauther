@@ -26,6 +26,7 @@ class MenuHelper:
             "Reset to original",
         ]
         self.deauther_menu = [
+            "Back to main menu",
             "Scan Networks",
             "Set Channel (default channel-hopping)",
             "Set band (default 2.4GHz + 5GHz)",
@@ -53,7 +54,7 @@ class MenuHelper:
                     if selected_option < 1 or selected_option > len(self.manager.targets):
                         raise ValueError
                 if option == 'channel (0 for channel-hopping)':
-                    if selected_option < 1 or selected_option > len(self.manager.chosen_interface.channels):
+                    if selected_option < 0 or selected_option > len(self.manager.chosen_interface.channels):
                         raise ValueError
                 return selected_option
             except ValueError:

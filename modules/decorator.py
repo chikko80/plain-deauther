@@ -41,6 +41,7 @@ def base_menu(color):
                 supported_bands = ", ".join(self.manager.chosen_interface.bands)
                 bands = colored(f'{supported_bands}',band_color)
                 channel_label = colored('Channel:',menu_color)
+                ap_channel_label = colored('APChannel:',menu_color)
                 if self.manager.chosen_interface.chosen_channel:
                     ichannel = colored(f'{self.manager.chosen_interface.chosen_channel}',channel_color)
                 if self.manager.chosen_interface.chosen_band:
@@ -72,7 +73,7 @@ def base_menu(color):
                         chosen_band_string = f' {seperator} {cband_label} {cband}' 
                         header_string += chosen_band_string
                     if self.manager.chosen_target:
-                        target_string = f'{seperator} {target_label} {target} {seperator} {channel_label} {target_channel}'
+                        target_string = f' {seperator} {target_label} {target} {seperator} {ap_channel_label} {target_channel}'
                         header_string += target_string
                     print(header_string)
                         

@@ -54,6 +54,8 @@ def deauther_menu():
     menu_helper.print_deauther_menu()
     option = menu_helper.read_option(option="deauther_menu")
     if option == 1:
+        return main_menu()
+    if option == 2:
         success = manager.start_scan()
         if not success:
             return main_menu()
@@ -61,15 +63,15 @@ def deauther_menu():
         option = menu_helper.read_option(option='target_menu')
         manager.select_target(option) 
         return deauther_menu()
-    elif option == 2:
+    elif option == 3:
         option = menu_helper.read_option(option='channel (0 for channel-hopping)')
         manager.select_channel(option) 
         return deauther_menu()
-    elif option == 3:
+    elif option == 4:
         option = menu_helper.yes_no_question("Select a band (0 for default) ",option=["2.4GHz/2","5GHz/5"])
         manager.select_band(option)
         return deauther_menu()
-    elif option == 4:
+    elif option == 5:
         pass
 
 def main_menu():
