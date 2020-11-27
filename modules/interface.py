@@ -10,6 +10,8 @@ class Interface:
         self.mac_address = None
         self.state = None
         self.bands = []
+        self.chosen_band = None
+        self.chosen_channel = None
 
     def __str__(self):
         return "Index: " + self.index + "\n" + "PHY: " + self.phy + "\n" +"Interface: " + self.interface + "\n" + "Driver: " + self.driver + "\n" +"Chipset: " + self.chipset + "\n" 

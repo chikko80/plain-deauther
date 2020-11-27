@@ -1,6 +1,7 @@
 from termcolor import colored
 from .interface import Interface
 from .menu_helper import clean_last_line
+from modules.scanner import Scanner
 import os
 import re
 import time
@@ -10,7 +11,9 @@ class Manager:
     def __init__(self):
         self.interfaces = []
         self.chosen_interface = None
-              
+        self.targets = []
+        self.chosen_target = None
+
     def read_interfaces(self):
         # print("airmon")
         self.read_airmon_information()
@@ -137,3 +140,10 @@ class Manager:
     def set_interface_up(self):
         os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
     
+    def start_scan(self):
+        scanner = Scanner(self.chosen_interface)
+        self.targets = scanner.start_scan()
+    
+    def select_target(self,option):
+        self.chosen_target = self.targets[len(self.targets)-1]
+

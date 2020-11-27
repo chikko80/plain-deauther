@@ -1,6 +1,6 @@
 import os
 from termcolor import cprint,colored
-# from settings import settings
+from settings import settings
 
 def base_menu(color):
     def function_wrapper(func):
@@ -128,6 +128,7 @@ def device_menu(func):
 
 def scanner_menu(func):
     def header(*args):
+        clean_output()
         #! for testing
         show_bssids = False
         # First row: columns
@@ -152,6 +153,7 @@ def scanner_menu(func):
         print(f'{num}{essid}{bssid}{rest}')
         print(f'{sep}{sep2}{sep3}{rest2}')
         func(*args)
+        cprint("   --------------------------------------------------------")
     return header
 
 

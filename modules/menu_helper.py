@@ -1,9 +1,8 @@
-from termcolor import colored,colored
-from .decorator import base_menu,device_menu
+from termcolor import colored,cprint
+from .decorator import base_menu,device_menu,scanner_menu
 import time
 import re
 from settings import settings
-
 
 class MenuHelper:
 
@@ -50,14 +49,14 @@ class MenuHelper:
                 if option == 'device_menu':
                     if selected_option < 1 or selected_option > len(self.device_menu):
                         raise ValueError
-                if option == 'check_kill':
-                    if selected_option < 1 or selected_option > len(self.device_menu):
+                if option == 'target_menu':
+                    if selected_option < 1 or selected_option > len(self.manager.targets):
                         raise ValueError
                 return selected_option
             except ValueError:
                 clean_last_line()
                 clean_last_line()
-                colored(f"No valid input. Please select a valid option","red")
+                cprint(f"No valid input. Please select a valid option","red")
                 print(f"Select {option}:\t",end="")
 
     def read_mac_address(self):
@@ -75,7 +74,7 @@ class MenuHelper:
             except ValueError:
                 clean_last_line()
                 clean_last_line()
-                colored(f"No valid input. Please enter a valid mac address","red")
+                cprint(f"No valid input. Please enter a valid mac address","red")
                 print(f"Custom MAC:\t",end="")
     
     @device_menu
@@ -104,9 +103,21 @@ class MenuHelper:
     def print_menu_options(self,option_list,color="green"):
         print()
         for index,option in enumerate(option_list):
-            colored("{: <5} {: <10} ".format(f"{index+1}.",f"{option}"),color)
+            cprint("{: <5} {: <10} ".format(f"{index+1}.",f"{option}"),color)
         print()
-
+    
+    @staticmethod
+    @scanner_menu
+    def print_targets(targets):
+        if targets:
+            for index,target in enumerate(targets,start=1):
+                print(colored(str(index).rjust(5)),target.to_str())
+            cprint("   --------------------------------------------------------")
+            total_count = colored(str(len(targets)),'yellow')
+            total_string = colored(f'Total: {total_count}','blue')
+            info_string = colored('If you found your target exit with Ctrl+C','red')
+            print(f'    {total_string} {info_string}')
+        
     def print_table_row(self,row_as_list):
         if settings.mobile:
 
@@ -115,7 +126,7 @@ class MenuHelper:
             print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
 
     def yes_no_question(self,message,option="Yes/y - No/n"):
-        colored(message,'yellow')
+        cprint(message,'yellow')
         print(colored(f"{option}:\t",'red'),end="")
         while True:
             try:

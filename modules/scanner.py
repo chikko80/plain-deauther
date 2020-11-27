@@ -2,49 +2,64 @@ import subprocess
 import shlex
 import os
 import time
-from termcolor import colored
-from deauther_models import Client,Target
-from decorator import scanner_menu
+import os.path
 
+from modules.deauther_models import Client,Target
+from modules.menu_helper import MenuHelper
+print_targets = MenuHelper.print_targets
 
 class Scanner:
 
-    # def __init__(self,interface):
-        # self.interface = interface
-        
-    def __init__(self):
-        pass
+    def __init__(self,interface):
+        self.interface = interface
+        self.filepath = 'scan-01.csv'
+        self.targets = None
 
-    def read_airmon_output(self):
-        delete_old_file()
-        # command = f"airodump-ng --wps -w scan --output-format csv {self.interface.interface}"
-        command = f"airodump-ng --wps -w scan --output-format csv --write-interval 1 wlan0mon"
-        process = subprocess.Popen(shlex.split(command),shell=False,stdout=subprocess.PIPE)
 
-        # Poll process.stdout to show stdout live
+    def start_scan(self):
+        command = [
+            'airodump-ng',
+            self.interface.interface,
+            '-a', # Only show associated clients
+            '-w', "scan", # Output file prefix
+            '--output-format' ,'csv',
+            '--write-interval', '1' # Write every second
+        ]
+
+        if self.interface.chosen_channel:
+            command.extend(["-c",str(self.interface.chosen_channel)])
+        elif self.interface.chosen_band:
+            command.extend(["--band",str(self.interface.chosen_band)])
+        else:
+            command.extend(["--band","abg"])
+
+        joined = " ".join(command) 
+        self.delete_old_file()
+        process = subprocess.Popen(shlex.split(joined),shell=False,stdout=subprocess.PIPE)
+        # Poll procVess.stdout to show stdout live
         try:
             while True:
                 process.stdout.readline()
                 if process.poll() is not None:
                     break
-                if not file_exists('scan-01.csv'):
+                if not self.file_exists():
                     continue
-                os.system('cls' if os.name == 'nt' else 'clear')
-                print_targets()
+                self.targets = get_targets_from_csv('scan-01.csv')
+                print_targets(self.targets)
+
                 time.sleep(1)
         except KeyboardInterrupt:
-            pass
+            return self.targets
 
+    def file_exists(self):
+        return os.path.isfile(self.filepath) 
 
-@scanner_menu
-def print_targets():
-    targets = get_targets_from_csv('scan-01.csv')
-    for index,target in enumerate(targets,start=1):
-        print(colored(str(index).rjust(5)),target.to_str())
+        
 
-def file_exists(filepath):
-    import os.path
-    return os.path.isfile(filepath) 
+    def delete_old_file(self):
+        #TODO execute without output
+        os.system('rm scan-01.csv')
+
 
 def get_targets_from_csv(csv_filename):
         '''Returns list of Target objects parsed from CSV file.'''
@@ -103,16 +118,3 @@ def get_targets_from_csv(csv_filename):
                         continue
 
         return targets
-
-
-def delete_old_file():
-    output = os.system('rm scan-01.csv')
-
-Scanner().read_airmon_output()
-
-
-
-
-
-
-

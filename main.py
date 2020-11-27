@@ -2,17 +2,14 @@
 import os
 import sys
 import time
-from termcolor import colored,colored
+from termcolor import colored,cprint
 from modules.menu_helper import MenuHelper
 from modules.manager import Manager
 from modules.decorator import clean_output
 from settings import settings
-from modules.deauther import Deauther
-from modules.scanner import Scanner
 
 manager = Manager()
 menu_helper = MenuHelper(manager)
-deauther = Deauther()
 
 
 def menu():
@@ -67,12 +64,12 @@ def main_menu():
             output = output + "Your other interfaces will probably lose their internet connection.."
             yes = menu_helper.yes_no_question(output)
             if yes:
-                colored('Killing processes..','red')
+                cprint('Killing processes..','red')
                 manager.check_kill()
-                colored('Done','green')
+                cprint('Done','green')
         success = manager.set_monitor_mode()
         if not success:
-            colored(f"Couldn't put '{manager.chosen_interface.interface}' into monitor mode..")
+            cprint(f"Couldn't put '{manager.chosen_interface.interface}' into monitor mode..")
             time.sleep(2) 
         main_menu()
     elif option == 4:
@@ -81,6 +78,23 @@ def main_menu():
     elif option == 5:
         menu_helper.print_deauther_menu()
         option = menu_helper.read_option(option="deauther_menu")
+        if option == 1:
+            manager.start_scan()
+            menu_helper.print_targets(manager.targets)
+            option = menu_helper.read_option(option='target_menu')
+            manager.select_target(option) 
+            print(manager.chosen_target)
+            main_menu()
+        elif option == 2:
+            pass
+        elif option == 3:
+            pass
+        elif option == 4:
+            pass
+        elif option == 5:
+            pass
+        elif option == 6:
+            pass
         main_menu()
 
 
