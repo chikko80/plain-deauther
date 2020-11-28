@@ -67,6 +67,12 @@ class MenuHelper:
                 if option == 'channel (0 for channel-hopping)':
                     if selected_option < 0 or selected_option > len(self.manager.chosen_interface.channels):
                         raise ValueError
+                if option == 'attack_menu':
+                    if selected_option < 1 or selected_option > len(self.attack_menu):
+                        raise ValueError
+                if option == 'client':
+                    if selected_option < 1 or selected_option > len(self.manager.chosen_target.clients):
+                        raise ValueError
                 return selected_option
             except ValueError:
                 clean_last_line()

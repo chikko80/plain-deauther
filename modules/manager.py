@@ -200,5 +200,5 @@ class Manager:
     
     def spoof_mac_address_of_client(self,option):
         client = self.chosen_target.clients[option-1]
-        bssid = client.bssid
+        bssid = client.station
         self.set_custom_mac_address(bssid)

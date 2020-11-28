@@ -85,7 +85,6 @@ def attack_menu():
         menu_helper.print_associated_clients()
         option = menu_helper.read_option(option="client")
         manager.spoof_mac_address_of_client(option)
-        #TODO spoof mac of client if exists
         return attack_menu()
     elif option == 3:
         menu_helper.print_attack_type_menu()
