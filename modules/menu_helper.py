@@ -32,7 +32,17 @@ class MenuHelper:
             "Set band (default 2.4GHz + 5GHz)",
             "Attack Network",
         ]
- 
+        self.attack_menu = [
+            "Back to deauther menu",
+            "Spoof MAC of a associated client",
+            "Set Attack Type (default flood-all)",
+            "Start Deauthentication :)",
+        ]
+        self.attack_type_menu = [
+            "Deauth all clients",
+            "Deauth all clients besides me (if in same network)",
+            "Deauth specific client",
+        ]
 
     def read_option(self,option='option'):
         print(f"\nSelect {option}:\t",end="")
@@ -104,6 +114,18 @@ class MenuHelper:
     @base_menu("blue")
     def print_deauther_menu(self):
         self.print_menu_options(self.deauther_menu)
+
+    @base_menu("red")
+    def print_attack_menu(self):
+        self.print_menu_options(self.attack_menu)
+
+    @base_menu("red")
+    def print_attack_type_menu(self):
+        self.print_menu_options(self.attack_type_menu)
+
+    @base_menu("blue")
+    def print_associated_clients(self):
+        self.print_menu_options(self.manager.chosen_target.return_clients_as_list())
 
     def print_menu_options(self,option_list,color="green"):
         print()

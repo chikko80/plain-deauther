@@ -27,11 +27,8 @@ class Client(object):
         self.power   = int(fields[3].strip())
         self.packets = int(fields[4].strip())
         self.bssid   =     fields[5].strip()
+        self.associated_essid = None
 
     def __str__(self):
         ''' String representation of a Client '''
-        result = ''
-        for (key,value) in self.__dict__.items():
-            result += key + ': ' + str(value)
-            result += ', '
-        return result
+        return f'Station: {self.station}  |  Connected AP: {self.associated_essid}'

@@ -159,3 +159,6 @@ class Target(object):
         # result += colored("")
         return result
 
+
+    def return_clients_as_list(self):
+        return [str(client) for client in self.clients]

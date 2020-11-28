@@ -54,14 +54,14 @@ def deauther_menu():
     option = menu_helper.read_option(option="deauther_menu")
     if option == 1:
         return main_menu()
-    if option == 2:
+    elif option == 2:
         success = manager.start_scan()
         if not success:
             return deauther_menu()
         menu_helper.print_targets(manager.targets,final=True)
         option = menu_helper.read_option(option='target_menu')
         manager.select_target(option) 
-        return deauther_menu()
+        return attack_menu()
     elif option == 3:
         option = menu_helper.read_option(option='channel (0 for channel-hopping)')
         manager.select_channel(option) 
@@ -71,7 +71,30 @@ def deauther_menu():
         manager.select_band(option)
         return deauther_menu()
     elif option == 5:
-        pass
+        return attack_menu()
+
+#TODO read options in menuhelper
+def attack_menu():
+    menu_helper.print_attack_menu()
+    option = menu_helper.read_option(option="attack_menu")
+    if option == 1:
+        return deauther_menu()
+    elif option == 2:
+        if not manager.clients_exists():
+            return deauther_menu()
+        menu_helper.print_associated_clients()
+        option = menu_helper.read_option(option="client")
+        manager.spoof_mac_address_of_client(option)
+        #TODO spoof mac of client if exists
+        return attack_menu()
+    elif option == 3:
+        menu_helper.print_attack_type_menu()
+        option = menu_helper.read_option(option="attack_menu")
+        manager.select_attack_type(option)
+        return attack_menu()
+    elif option == 4:
+        #TODO start deauth 
+        return attack_menu()
 
 def main_menu():
     menu_helper.print_main_menu_options()

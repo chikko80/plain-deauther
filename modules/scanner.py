@@ -35,7 +35,6 @@ class Scanner:
             command.extend(["--band",str("abg")])
 
         joined = " ".join(command) 
-        self.delete_old_file()
         process = subprocess.Popen(shlex.split(joined),shell=False,stdout=subprocess.PIPE)
         # Poll procVess.stdout to show stdout live
         try:
@@ -116,5 +115,9 @@ def get_targets_from_csv(csv_filename):
                         targets.append(target)
                     except Exception:
                         continue
+        for target in targets:
+            if len(target.clients) > 0:
+                for client in target.clients:
+                    client.associated_essid = target.essid
 
         return targets

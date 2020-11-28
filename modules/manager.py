@@ -12,6 +12,7 @@ class Manager:
         self.targets = []
         self.chosen_target = None
         self.scanner = None
+        self.attack_type = None
 
     def read_interfaces(self):
         self.read_airmon_information()
@@ -107,7 +108,13 @@ class Manager:
         print_message('Killing processes..','red')
         os.popen("airmon-ng check kill").read()
         print_message('Done','green')
-
+    
+    def clients_exists(self):
+        if len(self.chosen_target.clients) > 0:
+            return True
+        else:
+            print_message("No associated Clients available, try to scan again and find a network with clients.",'red')
+            return False
 
     def select_interface(self,option):
         index = option - 1 
@@ -135,7 +142,7 @@ class Manager:
         os.popen(f"airmon-ng start {self.chosen_interface.interface}").read()
         success =  self.update_device_informations("monitor")
         if not success:
-            print_message(f"Couldn't put '{self.chosen_interface.interface}' into monitor mode..")
+            print_message(f"Couldn't put '{self.chosen_interface.interface}' into monitor mode..",'red')
             return False
         return True
         
@@ -182,3 +189,16 @@ class Manager:
         if option == 0:
             self.chosen_interface.chosen_channel = None
         self.chosen_interface.chosen_channel = str(option)
+
+    def select_attack_type(self,option):
+        """
+            "1.Deauth all clients",
+            "2.Deauth all clients besides me (if in same network)",
+            "3.Deauth specific client",
+        """
+        self.attack_type = option          
+    
+    def spoof_mac_address_of_client(self,option):
+        client = self.chosen_target.clients[option-1]
+        bssid = client.bssid
+        self.set_custom_mac_address(bssid)
