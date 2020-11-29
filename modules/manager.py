@@ -15,7 +15,6 @@ class Manager:
         self.scanner = None
         self.deauther = None
         self.attack_type = 1
-        self.spoofed = False
         self.ignore_mac = None
         self.target_client = None
 
@@ -194,6 +193,7 @@ class Manager:
     def select_channel(self,option):
         self.chosen_target = None
         self.chosen_interface.chosen_band = None
+        self.target_client = None
         if option == 0:
             self.chosen_interface.chosen_channel = None
         self.chosen_interface.chosen_channel = str(option)
@@ -212,8 +212,6 @@ class Manager:
             self.target_client = None
         elif option == 4:
             self.ignore_mac = None
-        if self.spoofed:
-            print_message('You spoofed the address of a client. Therefore you are going to be disconnected','red',time_delay=3)
         self.attack_type = option          
 
     def select_target_client(self,option):

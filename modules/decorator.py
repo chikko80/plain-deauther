@@ -1,6 +1,7 @@
 import os
 from termcolor import cprint,colored
 from settings import settings
+from modules.menu_helper import print_message
 
 def base_menu(color):
     def function_wrapper(func):
@@ -217,6 +218,13 @@ def scanner_menu(func):
         cprint("   --------------------------------------------------------")
     return header
 
+def start_decorator(func):
+    #TODO maybe clear
+    def inner(*args):
+        print_message('Starting attack...','green',time_delay=1)
+        print_message('Stop attack with Ctrl+C...','red',time_delay=2)
+        func(*args)
+    return inner
 
 def print_default_colored_line(color):  
     cprint("--------------------------------------------------------------------------------------",color)

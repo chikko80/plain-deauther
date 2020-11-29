@@ -2,12 +2,13 @@ import subprocess
 import shlex
 import os
 from modules.menu_helper import print_message
+from modules.decorator import start_decorator
 from threading import Thread
 import time
 import fcntl
 import select
 
-
+        
 
 
 class Deauther:
@@ -17,15 +18,19 @@ class Deauther:
         self.target_ap_address = target_ap_address
         self.client = client
         self.clients = clients
-    
+
+    @start_decorator 
     def start_broadcast_deauth_attack(self):
         command = self.command_builder()
         launch_command(command)
         # self.delete_old_file()        
 
+    @start_decorator 
     def start_multi_client_deauth_attack(self):
         thread_list = [] 
-        print_message(f'Following clients will be disconnected: {self.clients}','yellow')
+        print_message(f'Following clients will be disconnected: {self.clients}','yellow',instant=True)
+        print_message('Stop attack with Ctrl+C...')
+        print_message
         for client in self.clients:
             command = self.command_builder(client)
             t = Thread(target=launch_command,args=(command,))
@@ -38,6 +43,7 @@ class Deauther:
         except KeyboardInterrupt as identifier:
             pass
 
+    @start_decorator 
     def start_specific_client_deauth_attack(self):
         command = self.command_builder(client_mac=self.client) 
         launch_command(command)
