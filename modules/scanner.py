@@ -56,7 +56,6 @@ class Scanner:
         return os.path.isfile(self.filepath) 
 
     def delete_old_file(self):
-        #TODO execute without output
         os.system('rm scan-01.csv')
 
 

@@ -161,6 +161,7 @@ class Manager:
         os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
     
     def set_interface_channel(self,interface_name,channel):
+        print_message(f"Settings {interface_name} on channel {channel}",'yellow',time_delay=1)
         os.popen(f"iwconfig {interface_name} channel {channel}").read()
     
     def start_scan(self):
@@ -225,7 +226,6 @@ class Manager:
         self.set_custom_mac_address(bssid)
     
 
-    #TODO checken ob ap gewaehlt
     def start_deauth_attack(self):
         #for deauth use standard interface
         default_interface = self.chosen_interface.interface.replace('mon','')

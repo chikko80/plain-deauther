@@ -1,7 +1,7 @@
 import os
+import time
 from termcolor import cprint,colored
 from settings import settings
-from modules.menu_helper import print_message
 
 def base_menu(color):
     def function_wrapper(func):
@@ -35,9 +35,14 @@ def base_menu(color):
                 band_label = colorize_menu_part("Supported Bands:")
                 supported_bands = ", ".join(self.manager.chosen_interface.bands)
                 bands = colored(supported_bands,band_color)
-                #TODO for mobile
                 at_label = colorize_menu_part("Attack Type:")
-                attack_type = colored(self.manager.get_attack_type(),'red')
+                attack_type = self.manager.get_attack_type()
+                if settings.mobile:
+                    if attack_type == 'Each sep. ex.':
+                        attack_type = attack_type.replace("Each sep. ex.",'Each s.ex.')
+                    elif attack_type == "Specific cl.":
+                        attack_type = attack_type.replace("Specific cl.",'Spec. cl.')
+                attack_type = colored(attack_type,'red')
                 if self.manager.chosen_interface.chosen_channel:
                     channel_label = colorize_menu_part("Channel:")
                     ichannel = colored(self.manager.chosen_interface.chosen_channel,channel_color)
@@ -66,6 +71,7 @@ def base_menu(color):
                     mac = f"{mac_label} {mac}"
                     state = f"{state_label} {state}"
                     bands = f'{band_label} {bands}'
+                    attack_type = f'{at_label} {attack_type}'
                     if self.manager.chosen_interface.chosen_channel:
                         ichannel = f'{channel_label} {ichannel}'
                     else: ichannel = ''
@@ -78,16 +84,26 @@ def base_menu(color):
                     else:
                         target = ''
                         tchannel = ''
-                    print("{: <50} {: <20} {: <20} ".format(interface,seperator,mode))
-                    print("{: <50} {: <20} {: <20} ".format(mac,seperator,state))
+                    if self.manager.target_client:
+                        target_client = f'{tc_label} {target_client}'
+                    else: target_client = ''
+                    if self.manager.ignore_mac:
+                        ignore_mac = f'{ic_label} {ignore_mac}'
+                    else: ignore_mac = ''
+                    print("{: <50} {: <17} {: <20} ".format(interface,seperator,mode))
+                    print("{: <50} {: <17} {: <20} ".format(mac,seperator,state))
                     print ("\033[A                                                                                     \033[A")
-                    print("{: <50} {: <20}".format(bands,seperator))
+                    print("{: <50} {: <17} {: <20}".format(bands,seperator,attack_type))
                     if ichannel:
-                        print("{: <50} {: <20}".format(ichannel,seperator))
+                        print("{: <50} {: <17}".format(ichannel,seperator))
                     if cband:
-                        print("{: <50} {: <20}".format(cband,seperator))
+                        print("{: <50} {: <17}".format(cband,seperator))
                     if target or tchannel:
-                        print("{: <50} {: <20} {: <20} ".format(target,seperator,tchannel))
+                        print("{: <50} {: <17} {: <20} ".format(target,seperator,tchannel))
+                    if target_client:
+                        print("{: <50} {: <17}".format(target_client,seperator))
+                    if ignore_mac:
+                        print("{: <50} {: <17}".format(ignore_mac,seperator))
                 else:
                     header_string = f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands} {seperator} {at_label} {attack_type}\n"
                     if self.manager.chosen_interface.chosen_channel:
@@ -218,13 +234,21 @@ def scanner_menu(func):
         cprint("   --------------------------------------------------------")
     return header
 
-def start_decorator(func):
-    #TODO maybe clear
-    def inner(*args):
-        print_message('Starting attack...','green',time_delay=1)
-        print_message('Stop attack with Ctrl+C...','red',time_delay=2)
-        func(*args)
-    return inner
+def abort_information(two_times=False):
+    def funcwrapper(func):
+        #TODO maybe clear
+        def inner(*args):
+            cprint('Starting attack...','green')
+            time.sleep(1)
+            if two_times:
+                cprint('Stop attack with DOUBLE Ctrl+C...','red')
+                time.sleep(3)
+            else:
+                cprint('Stop attack with Ctrl+C...','red')
+                time.sleep(2)
+            func(*args)
+        return inner
+    return funcwrapper
 
 def print_default_colored_line(color):  
     cprint("--------------------------------------------------------------------------------------",color)

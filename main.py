@@ -94,10 +94,13 @@ def attack_menu():
         menu_helper.print_attack_type_menu()
         attack_type_option = menu_helper.read_option(option="attack_type_menu")
         if attack_type_option == 3:
-            print_message("MAC-Address to ignore: \n",'yellow',instant=True)
-            manager.ignore_mac = menu_helper.read_mac_address()
+            print_message("MAC-Address to ignore (abort with 1): \n",'yellow',instant=True)
+            mac = menu_helper.read_mac_address()
+            if not mac:
+                return attack_menu()
+            manager.ignore_mac = mac
         if attack_type_option == 4:
-            custom = menu_helper.yes_no_question('Target client: Specify custom mac or choose one from scan results',option=['Custom/c','Scanned/s'])
+            custom = menu_helper.yes_no_question('Target client: Specify custom mac or choose one from scan results (abort with 1)',option=['Custom/c','Scanned/s'])
             if custom:
                 mac = menu_helper.read_mac_address()
                 if not mac:
@@ -110,12 +113,8 @@ def attack_menu():
         manager.select_attack_type(attack_type_option)
         return attack_menu()
     elif option == 4:
-        #TODO start deauth 
         manager.start_deauth_attack()
         return attack_menu()
-
-
-
 
 
 def main_menu():
@@ -130,6 +129,7 @@ def main_menu():
         if manager.in_monitor_mode():
             return main_menu()
         check_trouble()
+        print_message("Putting into monitor mode..",'yellow')
         manager.set_monitor_mode()
         return main_menu()
     elif option == 4:

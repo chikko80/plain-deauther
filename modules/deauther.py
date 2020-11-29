@@ -2,7 +2,7 @@ import subprocess
 import shlex
 import os
 from modules.menu_helper import print_message
-from modules.decorator import start_decorator
+from modules.decorator import abort_information
 from threading import Thread
 import time
 import fcntl
@@ -19,18 +19,16 @@ class Deauther:
         self.client = client
         self.clients = clients
 
-    @start_decorator 
+    @abort_information(two_times=False)
     def start_broadcast_deauth_attack(self):
         command = self.command_builder()
         launch_command(command)
         # self.delete_old_file()        
 
-    @start_decorator 
+    @abort_information(two_times=True)
     def start_multi_client_deauth_attack(self):
         thread_list = [] 
         print_message(f'Following clients will be disconnected: {self.clients}','yellow',instant=True)
-        print_message('Stop attack with Ctrl+C...')
-        print_message
         for client in self.clients:
             command = self.command_builder(client)
             t = Thread(target=launch_command,args=(command,))
@@ -43,7 +41,7 @@ class Deauther:
         except KeyboardInterrupt as identifier:
             pass
 
-    @start_decorator 
+    @abort_information(two_times=False)
     def start_specific_client_deauth_attack(self):
         command = self.command_builder(client_mac=self.client) 
         launch_command(command)
@@ -73,7 +71,6 @@ def launch_command(command):
 
 
 # def delete_old_file(self):
-#     #TODO execute without output
 #     os.system('rm scan-01.csv')
 
 
