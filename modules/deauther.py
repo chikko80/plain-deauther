@@ -25,8 +25,7 @@ class Deauther:
 
     def start_multi_client_deauth_attack(self):
         thread_list = [] 
-        print('Following clients will be disconnected: ',self.clients)
-        time.sleep(10)
+        print_message(f'Following clients will be disconnected: {self.clients}','yellow')
         for client in self.clients:
             command = self.command_builder(client)
             t = Thread(target=launch_command,args=(command,))

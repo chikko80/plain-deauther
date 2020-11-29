@@ -97,9 +97,12 @@ def attack_menu():
             print_message("MAC-Address to ignore: \n",'yellow',instant=True)
             manager.ignore_mac = menu_helper.read_mac_address()
         if option == 4:
-            custom = menu_helper.yes_no_question('Target client: Specify custom mac or choose one from scan results',option=['Custom/m','Scanned/s'])
+            custom = menu_helper.yes_no_question('Target client: Specify custom mac or choose one from scan results',option=['Custom/c','Scanned/s'])
             if custom:
-                manager.target_client = menu_helper.read_mac_address()
+                mac = menu_helper.read_mac_address()
+                if not mac:
+                    return attack_menu()
+                manager.target_client = mac
             else:
                 menu_helper.print_associated_clients()
                 option = menu_helper.read_option(option="client")

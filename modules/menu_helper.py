@@ -40,7 +40,7 @@ class MenuHelper:
         ]
         self.attack_type_menu = [
             "Deauth all clients (broadcast)",
-            "Deauth all clients (deauth every single)",
+            "Deauth all clients (default,deauth every single)",
             "Deauth all clients except one (f.i yourself) ",
             "Deauth specific client",
         ]

@@ -39,8 +39,7 @@ class Scanner:
         # Poll procVess.stdout to show stdout live
         try:
             while True:
-                #TODO check if needed
-                process.stdout.readline()
+                #TODO run in thread while deauth attack
                 if process.poll() is not None:
                     break
                 if not self.file_exists():

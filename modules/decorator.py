@@ -48,6 +48,14 @@ def base_menu(color):
                     target = colored(f'{self.manager.chosen_target.essid if self.manager.chosen_target.essid else self.manager.chosen_target.bssid}',target_color)
                     tchannel_label = colorize_menu_part("APChannel:")
                     target_channel = colored(self.manager.chosen_target.channel,target_color)
+                if self.manager.target_client:
+                    #TODO for mobile
+                    tc_label = colorize_menu_part("Target Client:")
+                    target_client = colored(self.manager.target_client,'red')
+                if self.manager.ignore_mac:
+                    #TODO for mobile
+                    ic_label = colorize_menu_part("Ignore Client:")
+                    ignore_mac = colored(self.manager.ignore_mac,'red')
                 if settings.mobile:
                     interface = f"{si_label} {si}" 
                     mode = f"{mode_label} {mode}"
@@ -85,8 +93,14 @@ def base_menu(color):
                         chosen_band_string = f' {seperator} {cband_label} {cband}' 
                         header_string += chosen_band_string
                     if self.manager.chosen_target:
-                        target_string = f' {seperator} {target_label} {target} {seperator} {tchannel_label} {target_channel}'
+                        target_string = f' {seperator} {target_label} {target} {seperator} {tchannel_label} {target_channel}\n'
                         header_string += target_string
+                    if self.manager.target_client:
+                        target_client_string = f' {seperator} {tc_label} {target_client}' 
+                        header_string += target_client_string
+                    if self.manager.ignore_mac:
+                        ignore_mac = f' {seperator} {ic_label} {ignore_mac}' 
+                        header_string += ignore_mac
                     print(header_string)
                         
                     # clean line,otherwise their will be a new line because string is at line limit

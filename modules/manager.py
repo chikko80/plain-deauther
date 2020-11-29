@@ -14,7 +14,7 @@ class Manager:
         self.chosen_target = None
         self.scanner = None
         self.deauther = None
-        self.attack_type = 1
+        self.attack_type = 2
         self.spoofed = False
         self.ignore_mac = None
         self.target_client = None
@@ -205,6 +205,13 @@ class Manager:
             "Deauth all clients except one (f.i yourself) ",
             "Deauth specific client",
         """
+        if option == 1 or option == 2:
+            self.ignore_mac = None
+            self.target_client = None
+        elif option == 3:
+            self.target_client = None
+        elif option == 4:
+            self.ignore_mac = None
         if self.spoofed:
             print_message('You spoofed the address of a client. Therefore you are going to be disconnected','red',time_delay=3)
         self.attack_type = option          
@@ -251,7 +258,7 @@ class Manager:
             self.deauther = Deauther(
                 default_interface,
                 self.chosen_target.bssid,
-                clients=prepared_clients
+                clients=without_ignore_mac
                 )
             self.deauther.start_multi_client_deauth_attack() 
         #* deauth specific one
