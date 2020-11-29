@@ -39,8 +39,9 @@ class MenuHelper:
             "Start Deauthentication :)",
         ]
         self.attack_type_menu = [
-            "Deauth all clients",
-            "Deauth all clients besides me (if in same network)",
+            "Deauth all clients (broadcast)",
+            "Deauth all clients (deauth every single)",
+            "Deauth all clients except one (f.i yourself) ",
             "Deauth specific client",
         ]
 
@@ -52,25 +53,28 @@ class MenuHelper:
                 if option == "interface":
                     if selected_option > len(self.manager.interfaces) or selected_option < 1:
                         raise ValueError
-                if option == "main_menu":
+                elif option == "main_menu":
                     if selected_option < 1 or selected_option > len(self.main_menu):
                         raise ValueError
-                if option == 'mac_changer':
+                elif option == 'mac_changer':
                     if selected_option < 1 or selected_option > len(self.mac_changer_menu):
                         raise ValueError
-                if option == 'device_menu':
+                elif option == 'device_menu':
                     if selected_option < 1 or selected_option > len(self.device_menu):
                         raise ValueError
-                if option == 'target_menu':
+                elif option == 'target_menu':
                     if selected_option < 1 or selected_option > len(self.manager.targets):
                         raise ValueError
-                if option == 'channel (0 for channel-hopping)':
+                elif option == 'channel (0 for channel-hopping)':
                     if selected_option < 0 or selected_option > len(self.manager.chosen_interface.channels):
                         raise ValueError
-                if option == 'attack_menu':
+                elif option == 'attack_menu':
                     if selected_option < 1 or selected_option > len(self.attack_menu):
                         raise ValueError
-                if option == 'client':
+                elif option == 'attack_type_menu':
+                    if selected_option < 1 or selected_option > len(self.attack_type_menu):
+                        raise ValueError
+                elif option == 'client':
                     if selected_option < 1 or selected_option > len(self.manager.chosen_target.clients):
                         raise ValueError
                 return selected_option
@@ -187,8 +191,10 @@ class MenuHelper:
                 clean_last_line()
                 print(colored(f"{option}:\t",'red'),end="")
 
-def print_message(message,color,time_delay=2):
+def print_message(message,color,time_delay=2,instant=False):
     cprint(message,color)
+    if instant:
+        return
     time.sleep(time_delay)
 
 

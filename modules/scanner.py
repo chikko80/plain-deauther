@@ -39,6 +39,7 @@ class Scanner:
         # Poll procVess.stdout to show stdout live
         try:
             while True:
+                #TODO check if needed
                 process.stdout.readline()
                 if process.poll() is not None:
                     break

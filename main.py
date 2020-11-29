@@ -2,7 +2,7 @@
 import os
 import sys
 import time
-from modules.menu_helper import MenuHelper
+from modules.menu_helper import MenuHelper, print_message
 from modules.manager import Manager
 from modules.decorator import clean_output
 from settings import settings
@@ -12,6 +12,8 @@ menu_helper = MenuHelper(manager)
 
 
 def menu():
+                #!TESTING
+    # attack_menu()
     select_device()
     select_interface()
     main_menu()
@@ -71,9 +73,11 @@ def deauther_menu():
         manager.select_band(option)
         return deauther_menu()
     elif option == 5:
+        if not manager.chosen_target:
+            print_message("Please select a target first..",'red')
+            return deauther_menu()
         return attack_menu()
 
-#TODO read options in menuhelper
 def attack_menu():
     menu_helper.print_attack_menu()
     option = menu_helper.read_option(option="attack_menu")
@@ -88,12 +92,28 @@ def attack_menu():
         return attack_menu()
     elif option == 3:
         menu_helper.print_attack_type_menu()
-        option = menu_helper.read_option(option="attack_menu")
+        option = menu_helper.read_option(option="attack_type_menu")
+        if option == 3:
+            print_message("MAC-Address to ignore: \n",'yellow',instant=True)
+            manager.ignore_mac = menu_helper.read_mac_address()
+        if option == 4:
+            custom = menu_helper.yes_no_question('Target client: Specify custom mac or choose one from scan results',option=['Custom/m','Scanned/s'])
+            if custom:
+                manager.target_client = menu_helper.read_mac_address()
+            else:
+                menu_helper.print_associated_clients()
+                option = menu_helper.read_option(option="client")
+                manager.select_target_client(option)
         manager.select_attack_type(option)
         return attack_menu()
     elif option == 4:
         #TODO start deauth 
+        manager.start_deauth_attack()
         return attack_menu()
+
+
+
+
 
 def main_menu():
     menu_helper.print_main_menu_options()
@@ -106,12 +126,7 @@ def main_menu():
     elif option == 3:
         if manager.in_monitor_mode():
             return main_menu()
-        trouble,output = manager.check_trouble()
-        if trouble and output:
-            output = output + "Your other interfaces will probably lose their internet connection.."
-            yes = menu_helper.yes_no_question(output)
-            if yes:
-                manager.check_kill()
+        check_trouble()
         manager.set_monitor_mode()
         return main_menu()
     elif option == 4:
@@ -119,6 +134,14 @@ def main_menu():
         return main_menu()
     elif option == 5:
         return deauther_menu()
+
+def check_trouble():
+    trouble,output = manager.check_trouble()
+    if trouble and output:
+        output = output + "Your other interfaces will probably lose their internet connection.."
+        yes = menu_helper.yes_no_question(output)
+        if yes:
+            manager.check_kill()
 
 
 if __name__ == "__main__":

