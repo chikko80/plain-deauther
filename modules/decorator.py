@@ -34,6 +34,9 @@ def base_menu(color):
                 band_label = colorize_menu_part("Supported Bands:")
                 supported_bands = ", ".join(self.manager.chosen_interface.bands)
                 bands = colored(supported_bands,band_color)
+                #TODO for mobile
+                at_label = colorize_menu_part("Attack Type:")
+                attack_type = colored(self.manager.get_attack_type(),'red')
                 if self.manager.chosen_interface.chosen_channel:
                     channel_label = colorize_menu_part("Channel:")
                     ichannel = colored(self.manager.chosen_interface.chosen_channel,channel_color)
@@ -85,7 +88,7 @@ def base_menu(color):
                     if target or tchannel:
                         print("{: <50} {: <20} {: <20} ".format(target,seperator,tchannel))
                 else:
-                    header_string = f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands}"
+                    header_string = f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands} {seperator} {at_label} {attack_type}\n"
                     if self.manager.chosen_interface.chosen_channel:
                         chosen_channel_string = f' {seperator} {channel_label} {ichannel}' 
                         header_string += chosen_channel_string
@@ -93,7 +96,7 @@ def base_menu(color):
                         chosen_band_string = f' {seperator} {cband_label} {cband}' 
                         header_string += chosen_band_string
                     if self.manager.chosen_target:
-                        target_string = f' {seperator} {target_label} {target} {seperator} {tchannel_label} {target_channel}\n'
+                        target_string = f' {seperator} {target_label} {target} {seperator} {tchannel_label} {target_channel}'
                         header_string += target_string
                     if self.manager.target_client:
                         target_client_string = f' {seperator} {tc_label} {target_client}' 

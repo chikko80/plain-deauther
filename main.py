@@ -61,16 +61,16 @@ def deauther_menu():
         if not success:
             return deauther_menu()
         menu_helper.print_targets(manager.targets,final=True)
-        option = menu_helper.read_option(option='target_menu')
-        manager.select_target(option) 
+        inner_option = menu_helper.read_option(option='target_menu')
+        manager.select_target(inner_option) 
         return attack_menu()
     elif option == 3:
-        option = menu_helper.read_option(option='channel (0 for channel-hopping)')
-        manager.select_channel(option) 
+        inner_option = menu_helper.read_option(option='channel (0 for channel-hopping)')
+        manager.select_channel(inner_option) 
         return deauther_menu()
     elif option == 4:
-        option = menu_helper.yes_no_question("Select a band (0 for default) ",option=["2.4GHz/2","5GHz/5"])
-        manager.select_band(option)
+        inner_option = menu_helper.yes_no_question("Select a band (0 for default) ",option=["2.4GHz/2","5GHz/5"])
+        manager.select_band(inner_option)
         return deauther_menu()
     elif option == 5:
         if not manager.chosen_target:
@@ -87,16 +87,16 @@ def attack_menu():
         if not manager.clients_exists():
             return deauther_menu()
         menu_helper.print_associated_clients()
-        option = menu_helper.read_option(option="client")
-        manager.spoof_mac_address_of_client(option)
+        inner_option = menu_helper.read_option(option="client")
+        manager.spoof_mac_address_of_client(inner_option)
         return attack_menu()
     elif option == 3:
         menu_helper.print_attack_type_menu()
-        option = menu_helper.read_option(option="attack_type_menu")
-        if option == 3:
+        attack_type_option = menu_helper.read_option(option="attack_type_menu")
+        if attack_type_option == 3:
             print_message("MAC-Address to ignore: \n",'yellow',instant=True)
             manager.ignore_mac = menu_helper.read_mac_address()
-        if option == 4:
+        if attack_type_option == 4:
             custom = menu_helper.yes_no_question('Target client: Specify custom mac or choose one from scan results',option=['Custom/c','Scanned/s'])
             if custom:
                 mac = menu_helper.read_mac_address()
@@ -105,9 +105,9 @@ def attack_menu():
                 manager.target_client = mac
             else:
                 menu_helper.print_associated_clients()
-                option = menu_helper.read_option(option="client")
-                manager.select_target_client(option)
-        manager.select_attack_type(option)
+                inner_option = menu_helper.read_option(option="client")
+                manager.select_target_client(inner_option)
+        manager.select_attack_type(attack_type_option)
         return attack_menu()
     elif option == 4:
         #TODO start deauth 

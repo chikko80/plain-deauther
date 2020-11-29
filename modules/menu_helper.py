@@ -39,8 +39,8 @@ class MenuHelper:
             "Start Deauthentication :)",
         ]
         self.attack_type_menu = [
-            "Deauth all clients (broadcast)",
-            "Deauth all clients (default,deauth every single)",
+            "Deauth all clients (default,broadcast)",
+            "Deauth each client separately (sometimes more efficient than broadcast)",
             "Deauth all clients except one (f.i yourself) ",
             "Deauth specific client",
         ]

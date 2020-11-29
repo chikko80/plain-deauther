@@ -14,7 +14,7 @@ class Manager:
         self.chosen_target = None
         self.scanner = None
         self.deauther = None
-        self.attack_type = 2
+        self.attack_type = 1
         self.spoofed = False
         self.ignore_mac = None
         self.target_client = None
@@ -254,7 +254,7 @@ class Manager:
         #* deauth each separately except one
         if self.attack_type == 3:
             prepared_clients = [self.chosen_target.clients[i].station for i,client in enumerate(self.chosen_target.clients)]
-            without_ignore_mac = [bssid for bssid in prepared_clients if bssid != self.ignore_mac]
+            without_ignore_mac = [bssid for bssid in prepared_clients if bssid.lower() != self.ignore_mac.lower()]
             self.deauther = Deauther(
                 default_interface,
                 self.chosen_target.bssid,
@@ -263,6 +263,8 @@ class Manager:
             self.deauther.start_multi_client_deauth_attack() 
         #* deauth specific one
         if self.attack_type == 4:
+            #* spoofing the target client mac is much more efficient
+            self.set_custom_mac_address(self.target_client)
             self.deauther = Deauther(
                 default_interface,
                 self.chosen_target.bssid,
@@ -270,3 +272,13 @@ class Manager:
                 )
             self.deauther.start_specific_client_deauth_attack() 
         
+
+    def get_attack_type(self):
+        if self.attack_type == 1:
+            return "Broadcast"
+        elif self.attack_type == 2:
+            return "Each sep."
+        elif self.attack_type == 3:
+            return "Each sep. ex."
+        elif self.attack_type == 4:
+            return "Specific cl."
