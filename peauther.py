@@ -10,6 +10,7 @@ from settings import settings
 manager = Manager()
 menu_helper = MenuHelper(manager)
 
+#TODO commenten
 
 def menu():
     select_device()
