@@ -58,7 +58,6 @@ def base_menu(color):
                 if settings.mobile:
                     print("{: <50} {: <17} {: <20} ".format(se_interface,seperator,mode))
                     print("{: <50} {: <17} {: <20} ".format(mac,seperator,state))
-                    print ("\033[A                                                                                     \033[A")
                     print("{: <50} {: <17} {: <20}".format(bands,seperator,attack_type))
                     if self.manager.chosen_interface.chosen_channel:
                         print("{: <50} {: <17}".format(interface_channel,seperator))
