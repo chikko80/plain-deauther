@@ -4,6 +4,9 @@ from termcolor import cprint,colored
 from settings import settings
 
 def base_menu(color):
+    """
+    base menu decorator function that draws a menu
+    """
     def function_wrapper(func):
         def draw_outlines(*args):
             if settings.mobile:
@@ -22,106 +25,64 @@ def base_menu(color):
             else:
                 def colorize_menu_part(s):
                     return colored(s,'cyan')
-                interface_color = mode_color = mac_color = state_color = band_color = channel_color = target_color = 'red'
+                def colorize_vars_part(s):
+                    return colored(s,'red')
                 seperator = colorize_menu_part("|")
-                si_label = colorize_menu_part('Selected interface:')
-                si = colored(self.manager.chosen_interface.interface,interface_color)
-                mode_label = colorize_menu_part("Mode:")
-                mode = colored(self.manager.chosen_interface.mode,mode_color)
-                mac_label = colorize_menu_part('MAC:')
-                mac = colored(self.manager.chosen_interface.mac_address,mac_color)
-                state_label = colorize_menu_part("State:")
-                state = colored(self.manager.chosen_interface.state,state_color)
-                band_label = colorize_menu_part("Supported Bands:")
-                supported_bands = ", ".join(self.manager.chosen_interface.bands)
-                bands = colored(supported_bands,band_color)
-                at_label = colorize_menu_part("Attack Type:")
+                se_interface = colorize_menu_part('Selected interface: ') + colorize_vars_part(self.manager.chosen_interface.interface)
+                mode = colorize_menu_part("Mode: ") + colorize_vars_part(self.manager.chosen_interface.mode)
+                mac = colorize_menu_part('MAC: ') + colorize_vars_part(self.manager.chosen_interface.mac_address)
+                state = colorize_menu_part("State: ") + colorize_vars_part(self.manager.chosen_interface.state)
+                bands  = colorize_menu_part("Supported Bands: ") + colorize_vars_part(", ".join(self.manager.chosen_interface.bands))
                 attack_type = self.manager.get_attack_type()
                 if settings.mobile:
                     if attack_type == 'Each sep. ex.':
                         attack_type = attack_type.replace("Each sep. ex.",'Each s.ex.')
                     elif attack_type == "Specific cl.":
                         attack_type = attack_type.replace("Specific cl.",'Spec. cl.')
-                attack_type = colored(attack_type,'red')
+                attack_type = colorize_menu_part("Attack Type: ") + colorize_vars_part(attack_type)
                 if self.manager.chosen_interface.chosen_channel:
-                    channel_label = colorize_menu_part("Channel:")
-                    ichannel = colored(self.manager.chosen_interface.chosen_channel,channel_color)
+                    interface_channel = colorize_menu_part("Channel: ") + colorize_vars_part(self.manager.chosen_interface.chosen_channel)
                 if self.manager.chosen_interface.chosen_band:
-                    cband_label = colorize_menu_part("Selected Band:")
                     if self.manager.chosen_interface.chosen_band == 'a':
-                        cband = colored('5GHz',band_color)
+                        cband = colorize_vars_part('5GHz')
                     else:
-                        cband = colored('2.4GHz',band_color)
+                        cband = colorize_vars_part('2.4GHz')
+                    se_band = colorize_menu_part("Selected Band: ") + cband
                 if self.manager.chosen_target:
-                    target_label = colorize_menu_part("Target AP:")
-                    target = colored(f'{self.manager.chosen_target.essid if self.manager.chosen_target.essid else self.manager.chosen_target.bssid}',target_color)
-                    tchannel_label = colorize_menu_part("APChannel:")
-                    target_channel = colored(self.manager.chosen_target.channel,target_color)
+                    target = colorize_menu_part("Target AP: ") + colorize_vars_part(f'{self.manager.chosen_target.essid if self.manager.chosen_target.essid else self.manager.chosen_target.bssid}')
+                    target_channel = colorize_menu_part("APChannel: ") + colorize_vars_part(self.manager.chosen_target.channel if self.manager.chosen_target.channel else "")
                 if self.manager.target_client:
-                    #TODO for mobile
-                    tc_label = colorize_menu_part("Target Client:")
-                    target_client = colored(self.manager.target_client,'red')
+                    target_client = colorize_menu_part("Target Client: ") + colorize_vars_part(self.manager.target_client)
                 if self.manager.ignore_mac:
-                    #TODO for mobile
-                    ic_label = colorize_menu_part("Ignore Client:")
-                    ignore_mac = colored(self.manager.ignore_mac,'red')
+                    ignore_mac = colorize_menu_part("Ignore Client: ") + colorize_vars_part(self.manager.ignore_mac)
                 if settings.mobile:
-                    interface = f"{si_label} {si}" 
-                    mode = f"{mode_label} {mode}"
-                    mac = f"{mac_label} {mac}"
-                    state = f"{state_label} {state}"
-                    bands = f'{band_label} {bands}'
-                    attack_type = f'{at_label} {attack_type}'
-                    if self.manager.chosen_interface.chosen_channel:
-                        ichannel = f'{channel_label} {ichannel}'
-                    else: ichannel = ''
-                    if self.manager.chosen_interface.chosen_band:
-                        cband = f'{cband_label} {cband}'
-                    else: cband = ''
-                    if self.manager.chosen_target:
-                        target = f'{target_label} {target}'
-                        tchannel = f'{tchannel_label} {target_channel}'
-                    else:
-                        target = ''
-                        tchannel = ''
-                    if self.manager.target_client:
-                        target_client = f'{tc_label} {target_client}'
-                    else: target_client = ''
-                    if self.manager.ignore_mac:
-                        ignore_mac = f'{ic_label} {ignore_mac}'
-                    else: ignore_mac = ''
-                    print("{: <50} {: <17} {: <20} ".format(interface,seperator,mode))
+                    print("{: <50} {: <17} {: <20} ".format(se_interface,seperator,mode))
                     print("{: <50} {: <17} {: <20} ".format(mac,seperator,state))
                     print ("\033[A                                                                                     \033[A")
                     print("{: <50} {: <17} {: <20}".format(bands,seperator,attack_type))
-                    if ichannel:
-                        print("{: <50} {: <17}".format(ichannel,seperator))
-                    if cband:
-                        print("{: <50} {: <17}".format(cband,seperator))
-                    if target or tchannel:
-                        print("{: <50} {: <17} {: <20} ".format(target,seperator,tchannel))
-                    if target_client:
+                    if self.manager.chosen_interface.chosen_channel:
+                        print("{: <50} {: <17}".format(interface_channel,seperator))
+                    if self.manager.chosen_interface.chosen_band:
+                        print("{: <50} {: <17}".format(se_band,seperator))
+                    if self.manager.chosen_target:
+                        print("{: <50} {: <17} {: <20} ".format(target,seperator,target_channel))
+                    if self.manager.target_client:
                         print("{: <50} {: <17}".format(target_client,seperator))
-                    if ignore_mac:
+                    if self.manager.ignore_mac:
                         print("{: <50} {: <17}".format(ignore_mac,seperator))
                 else:
-                    header_string = f"{si_label} {si} {seperator} {mode_label} {mode} {seperator} {mac_label} {mac} {seperator} {state_label} {state}{band_label} {bands} {seperator} {at_label} {attack_type}\n"
-                    if self.manager.chosen_interface.chosen_channel:
-                        chosen_channel_string = f' {seperator} {channel_label} {ichannel}' 
-                        header_string += chosen_channel_string
-                    if self.manager.chosen_interface.chosen_band:
-                        chosen_band_string = f' {seperator} {cband_label} {cband}' 
-                        header_string += chosen_band_string
+                    print("{: <50} {: <13} {: <34} {: <13} {: <43}".format(se_interface,seperator,mode,seperator,mac))
+                    print("{: <50} {: <13} {: <34} {: <13} {: <43}".format(bands,seperator,state,seperator,attack_type))
                     if self.manager.chosen_target:
-                        target_string = f' {seperator} {target_label} {target} {seperator} {tchannel_label} {target_channel}'
-                        header_string += target_string
+                        print("{: <50} {: <13} {: <34}".format(target,seperator,target_channel))
+                    if self.manager.chosen_interface.chosen_channel:
+                        print(interface_channel)
+                    if self.manager.chosen_interface.chosen_band:
+                        print(se_band)
                     if self.manager.target_client:
-                        target_client_string = f' {seperator} {tc_label} {target_client}' 
-                        header_string += target_client_string
+                        print(target_client)
                     if self.manager.ignore_mac:
-                        ignore_mac = f' {seperator} {ic_label} {ignore_mac}' 
-                        header_string += ignore_mac
-                    print(header_string)
+                        print(ignore_mac)
                         
                     # clean line,otherwise their will be a new line because string is at line limit
                 # print ("\033[A                                                                                      \033[A")

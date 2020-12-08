@@ -52,10 +52,10 @@ class Manager:
 
     def read_interface_state(self,interface=None):
         if interface:
-            interface.state = os.popen(f"cat /sys/class/net/{interface.interface}/operstate").read()
+            interface.state = os.popen(f"cat /sys/class/net/{interface.interface}/operstate").read().strip()
         else:
             for interface in self.interfaces:
-                interface.state = os.popen(f"cat /sys/class/net/{interface.interface}/operstate").read()
+                interface.state = os.popen(f"cat /sys/class/net/{interface.interface}/operstate").read().strip()
 
 
     def read_supported_bands_and_channels(self,interface=None):
