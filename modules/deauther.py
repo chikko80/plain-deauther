@@ -1,14 +1,13 @@
-import subprocess
-import shlex
-import os
-from modules.menu_helper import print_message
-from modules.decorator import abort_information
-from threading import Thread
-import time
 import fcntl
+import os
 import select
+import shlex
+import subprocess
+import time
+from threading import Thread
 
-        
+from modules.decorator import abort_information
+from modules.menu_helper import print_message
 
 
 class Deauther:
@@ -108,46 +107,46 @@ def launch_command(command):
 
 
 
-            # joined_command = " ".join(start_command) 
-            # joined_command = 'aireplay-ng  --deauth 0 -a D4:21:22:77:93:4B wlan0'
-            # joined_command = 'airodump-ng wlan0mon' 
+        #     joined_command = " ".join(start_command) 
+        #     joined_command = 'aireplay-ng  --deauth 0 -a D4:21:22:77:93:4B wlan0'
+        #     joined_command = 'airodump-ng wlan0mon' 
             # log = open(self.filepath,mode='a')
-            # command = shlex.split(joined_command)
+        #     command = shlex.split(joined_command)
             # process = subprocess.Popen(joined_command, shell=True, stdout=subprocess.PIPE, universal_newlines=False)
-            # process = subprocess.run('airodump-ng wlan0mon',bufsize=1,shell=True,stdout=subprocess.PIPE)
-            # process = subprocess.Popen(shlex.split(joined_command),shell=False,stdout=log)
-            # fd = process.stdout.fileno()
-            # fl = fcntl.fcntl(fd, fcntl.F_GETFL)
-            # fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+        #     process = subprocess.run('airodump-ng wlan0mon',bufsize=1,shell=True,stdout=subprocess.PIPE)
+        #     process = subprocess.Popen(shlex.split(joined_command),shell=False,stdout=log)
+        #     fd = process.stdout.fileno()
+        #     fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+        #     fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
 
-            # while True:
-                # output = process.stdout.readline()
-                # if output:
-                    # print(output.decode('utf-8'))
-                    # print(numberOfBytesReceived)
-                # time.sleep(0.5)
-                # if numberOfBytesReceived <= 0:
-                #     raise Exception("No data received!")
+        #     while True:
+        #         output = process.stdout.read(4096)
+        #         if output:
+        #             print(output.decode('utf-8'))
+        #             print(numberOfBytesReceived)
+        #         time.sleep(0.5)
+        #         if numberOfBytesReceived <= 0:
+        #             raise Exception("No data received!")
 
-            # process = subprocess.run('airodump-ng wlan0mon',bufsize=1,shell=True,stdout=subprocess.PIPE)
-            # process = subprocess.Popen(shlex.split(joined_command),shell=False,stdout=log)
-            # while True:
-            #     with open(self.filepath,'r') as stream:
-            #         for line in stream:
-            #             print(line)
+        #     process = subprocess.run('airodump-ng wlan0mon',bufsize=1,shell=True,stdout=subprocess.PIPE)
+        #     process = subprocess.Popen(shlex.split(joined_command),shell=False,stdout=log)
+        #     while True:
+        #         with open(self.filepath,'r') as stream:
+        #             for line in stream:
+        #                 print(line)
                 
-            #     time.sleep(1)
-           ## But do not wait till netstat finish, start displaying output immediately ##
-            # while True:
-            #     # with open(self.filepath,mode='r+') as stream:
-            #     #     for line in stream:
-            #     #         print(line)
-            #     output = process.communicate()
-            #     print(output)
+        #         time.sleep(1)
+        #    # But do not wait till netstat finish, start displaying output immediately ##
+        #     while True:
+        #         # with open(self.filepath,mode='r+') as stream:
+        #         #     for line in stream:
+        #         #         print(line)
+        #         output = process.communicate()
+        #         print(output)
 
-            #         # fid.seek(0)
-            #         # fid.truncate()
-            #     if process.poll() is not None:
-            #         return
-            #     # print_message(output,'red',instant=True) 
+        #             # fid.seek(0)
+        #             # fid.truncate()
+        #         if process.poll() is not None:
+        #             return
+        #         # print_message(output,'red',instant=True) 
   

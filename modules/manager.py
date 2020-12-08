@@ -1,6 +1,8 @@
 from .interface import Interface
 from .menu_helper import print_message
 from modules.scanner import Scanner
+from settings import settings
+
 from modules.deauther import Deauther
 import os
 import re
@@ -228,7 +230,10 @@ class Manager:
 
     def start_deauth_attack(self):
         #for deauth use standard interface
-        default_interface = self.chosen_interface.interface.replace('mon','')
+        if settings.mobile:
+            default_interface = self.chosen_interface.interface
+        else:
+            default_interface = self.chosen_interface.interface.replace('mon','')
         # set channel of default_interface to ap channel
         self.set_interface_channel(default_interface,self.chosen_target.channel)
 

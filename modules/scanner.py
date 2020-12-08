@@ -18,6 +18,7 @@ class Scanner:
 
 
     def start_scan(self):
+        self.delete_old_file()
         command = [
             'airodump-ng',
             self.interface.interface,
