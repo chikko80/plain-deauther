@@ -8,6 +8,10 @@ import os
 import re
 
 class Manager:
+    """
+    class that manages the interface, targets, etc.
+    main class
+    """
 
     def __init__(self):
         self.interfaces = []
@@ -27,6 +31,9 @@ class Manager:
         self.read_supported_bands_and_channels()
     
     def read_airmon_information(self):
+        """
+        reads and parses the output of airmon-ng
+        """
         self.interfaces = []
         output = os.popen("airmon-ng").read()
         output = output.split("\n")
@@ -40,6 +47,9 @@ class Manager:
                 index +=1
 
     def read_mac_addresses(self,update_current=False):    
+        """
+        gets the mac addresses to the interfaces from system
+        """
         if update_current:
             output = os.popen(f"ip link show {self.chosen_interface.interface}").read()
             addr = re.search(r"([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})",output).group(0)
@@ -51,6 +61,9 @@ class Manager:
                 interface.mac_address = addr.upper()
 
     def read_interface_state(self,interface=None):
+        """
+        reads the interface state from /sys/class/net/
+        """
         if interface:
             interface.state = os.popen(f"cat /sys/class/net/{interface.interface}/operstate").read().strip()
         else:
@@ -59,6 +72,9 @@ class Manager:
 
 
     def read_supported_bands_and_channels(self,interface=None):
+        """
+        reads and parses which bands are supported with iwlist
+        """
         def check_supp(interface): 
             output = os.popen(f"iwlist {interface.interface} freq").read()
             interface.bands = []
@@ -84,6 +100,9 @@ class Manager:
 
 
     def update_device_informations(self,mode):
+        """
+        checks if interface got into monitormode
+        """
         self.read_interfaces()
         if mode == "monitor":
             target_mode = self.chosen_interface.interface + "mon"
@@ -97,12 +116,18 @@ class Manager:
         return False 
     
     def in_monitor_mode(self):
+        """
+        checks if interface is in monitormode just by name
+        """
         if "mon" in self.chosen_interface.interface:
             print_message("Interface is already in monitor mode..","yellow")
             return True
         return False
 
     def check_trouble(self):
+        """
+        check if processes could cause trouble with "airmon-ng check" 
+        """
         output = os.popen("airmon-ng check").read()
         if len(output.split("\n")) > 3:
             output = output.replace(r"using 'airmon-ng check kill'","").replace('they will','they will maybe')
@@ -123,6 +148,9 @@ class Manager:
             return False
 
     def select_interface(self,option):
+        """
+        selects an interface by given user input option
+        """
         index = option - 1 
         self.chosen_interface = self.interfaces[index]
     
@@ -139,12 +167,18 @@ class Manager:
         self.read_mac_addresses(update_current=True)
 
     def reset_mac_address(self):
+        """
+        resets mac address to hardware address
+        """
         self.set_interface_down()
         os.popen(f"macchanger -p {self.chosen_interface.interface} ").read()
         self.set_interface_up()
         self.read_mac_addresses(update_current=True)
 
     def set_monitor_mode(self):
+        """
+        settings chosen interface in monitor mode
+        """
         os.popen(f"airmon-ng start {self.chosen_interface.interface}").read()
         success =  self.update_device_informations("monitor")
         if not success:
@@ -153,6 +187,9 @@ class Manager:
         return True
         
     def set_managed_mode(self):
+        """
+        settings chosen interface in managed mode
+        """
         os.popen(f"airmon-ng stop {self.chosen_interface.interface}").read()
         return self.update_device_informations("managed")
 
@@ -167,6 +204,9 @@ class Manager:
         os.popen(f"iwconfig {interface_name} channel {channel}").read()
     
     def start_scan(self):
+        """
+        starts the scan, checks if interface is in monitor mode first
+        """
         if self.chosen_interface.mode != "Monitor":
             print_message("Interface not in monitor mode! Putting into monitor mode automatically..",'yellow')
             success =  self.set_monitor_mode()
@@ -181,9 +221,15 @@ class Manager:
         return True
     
     def select_target(self,option):
+        """
+        selects a target by given user input option
+        """
         self.chosen_target = self.targets[option-1]
 
     def select_band(self,option):
+        """
+        selects a band by given user input option
+        """
         self.chosen_target = None
         self.chosen_interface.chosen_channel = None
         if option == 0:
@@ -194,6 +240,9 @@ class Manager:
             self.chosen_interface.chosen_band = "a" 
 
     def select_channel(self,option):
+        """
+        selects a channel by given user input option
+        """
         self.chosen_target = None
         self.chosen_interface.chosen_band = None
         self.target_client = None
@@ -207,6 +256,7 @@ class Manager:
             "Deauth all clients (deauth every single)",
             "Deauth all clients except one (f.i yourself) ",
             "Deauth specific client",
+        Resettings some class variables in certain cases
         """
         if option == 1 or option == 2:
             self.ignore_mac = None
@@ -218,18 +268,28 @@ class Manager:
         self.attack_type = option          
 
     def select_target_client(self,option):
+        """
+        selects a client_mac_adress by given user input option
+        """
         client = self.chosen_target.clients[option-1]
         bssid = client.station
         self.target_client = bssid
     
     def spoof_mac_address_of_client(self,option):
+        """
+        settings the mac adress of the selected client
+        """
         client = self.chosen_target.clients[option-1]
         bssid = client.station
         self.set_custom_mac_address(bssid)
     
 
     def start_deauth_attack(self):
-        #for deauth use standard interface
+        """
+        starts the deauth attack with given options
+        on some smartphones there is no default wlanX interface
+        if wlanX is in monitormode, so then deauth also with monitor interface wlanXmon
+        """
         if settings.mobile:
             default_interface = self.chosen_interface.interface
         else:

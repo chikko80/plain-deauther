@@ -5,7 +5,7 @@ from settings import settings
 
 def base_menu(color):
     """
-    base menu decorator function that draws a menu
+    base menu decorator function that draws a menu for desktop or mobile version
     """
     def function_wrapper(func):
         def draw_outlines(*args):
@@ -94,6 +94,9 @@ def base_menu(color):
 
 
 def print_default_banner():
+    """
+    banner for desktop version
+    """
     [print() for _ in range(5)]
     print_default_colored_line('green')
     print_default_colored_line('green')
@@ -119,6 +122,9 @@ def print_default_banner():
 
 
 def print_mobile_banner():
+    """
+    banner for mobile version
+    """
     [print() for _ in range(2)]
     print_mobile_colored_line("green")
     print_mobile_colored_line("green")
@@ -138,6 +144,9 @@ def print_mobile_banner():
     print_mobile_colored_line("green")
 
 def os_menu(func):
+    """
+    start menu - platform selection 
+    """
     def draw_start_banner(*args):
         clean_output()
         print_mobile_colored_line('green')
@@ -166,6 +175,9 @@ def os_menu(func):
 
 
 def scanner_menu(func):
+    """
+    draws the outer menu while scanning
+    """
     def header(*args,**kwargs):
         clean_output()
         #! for testing
@@ -196,6 +208,9 @@ def scanner_menu(func):
     return header
 
 def abort_information(two_times=False):
+    """
+    shows the abort information how to exit the scanner
+    """
     def funcwrapper(func):
         #TODO maybe clear
         def inner(*args):

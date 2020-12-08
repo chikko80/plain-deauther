@@ -124,7 +124,10 @@ def deauther_menu():
     # change channel
     elif option == 3:
         inner_option = menu_helper.read_option(option='channel (0 for channel-hopping)')
-        manager.select_channel(inner_option) 
+        if inner_option == 0:
+            manager.chosen_interface.chosen_channel = None
+        else:
+            manager.select_channel(inner_option) 
         return deauther_menu()
 
     # change band

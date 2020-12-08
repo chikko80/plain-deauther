@@ -1,4 +1,7 @@
 class Interface:
+    """
+    presents an interface with his options
+    """
 
     def __init__(self,index,phy,interface,driver,chipset):
         self.index = index

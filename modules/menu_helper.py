@@ -5,6 +5,9 @@ import re
 from settings import settings
 
 class MenuHelper:
+    """
+    menu helper for printing and handling command line 'gui'
+    """
 
     def __init__(self,manager):
         self.manager = manager
@@ -46,6 +49,10 @@ class MenuHelper:
         ]
 
     def read_option(self,option='option'):
+        """
+        checks if userinput is valid
+        """
+
         print(f"\nSelect {option}:\t",end="")
         while True:
             try:
@@ -88,6 +95,9 @@ class MenuHelper:
                 print(f"Select {option}:\t",end="")
 
     def read_mac_address(self):
+        """
+        reads user input mac address with regex mac validator
+        """
         valid_mac = r"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
         regex = re.compile(valid_mac)
         print(f"Custom MAC:\t",end="")
@@ -104,7 +114,10 @@ class MenuHelper:
                 clean_last_line()
                 cprint(f"No valid input. Please enter a valid mac address","red")
                 print(f"Custom MAC:\t",end="")
-    
+
+    """
+        Printing different menus with decorators
+    """
     @os_menu
     def print_device_menu(self):
         self.print_menu_options(self.device_menu)
@@ -149,6 +162,9 @@ class MenuHelper:
     @staticmethod
     @scanner_menu
     def print_targets(targets,final=False):
+        """
+        printing the targets during scanning 
+        """
         if targets:
             for index,target in enumerate(targets,start=1):
                 print(colored(str(index).rjust(5)),target.to_str())
@@ -163,12 +179,19 @@ class MenuHelper:
             print(f'    {total_string}{pipe}{info_string}')
         
     def print_table_row(self,row_as_list):
+        """
+        prints a table row for the menu
+        """
         if settings.mobile:
             print("{: <5} {: <5} {: <10} {: <10} {: <20}".format(*row_as_list))
         else:
             print("{: <5} {: <10} {: <15} {: <15} {: <20}".format(*row_as_list))
 
     def yes_no_question(self,message,option=["Yes/y","No/n"]):
+        """
+        prints a yes or no questions, but option can vary 
+        returns true if option[0] was selected
+        """
         cprint(message,'yellow')
         printed_option = " - ".join(option)
         print(colored(f"{printed_option}:\t",'red'),end="")
