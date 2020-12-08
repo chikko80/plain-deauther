@@ -77,6 +77,9 @@ class MenuHelper:
                 elif option == 'client':
                     if selected_option < 1 or selected_option > len(self.manager.chosen_target.clients):
                         raise ValueError
+                elif option == 'interface_exception':
+                    if selected_option < 1 or selected_option > len(self.manager.interfaces):
+                        raise ValueError
                 return selected_option
             except ValueError:
                 clean_last_line()

@@ -94,11 +94,17 @@ def attack_menu():
         menu_helper.print_attack_type_menu()
         attack_type_option = menu_helper.read_option(option="attack_type_menu")
         if attack_type_option == 3:
-            print_message("MAC-Address to ignore (abort with 1): \n",'yellow',instant=True)
-            mac = menu_helper.read_mac_address()
-            if not mac:
-                return attack_menu()
-            manager.ignore_mac = mac
+            custom = menu_helper.yes_no_question('Target client: Specify custom mac or choose one interfaces',option=['Custom/c','Interfaces/i'])
+            if custom:
+                print_message("MAC-Address to ignore (abort with 1): \n",'yellow',instant=True)
+                mac = menu_helper.read_mac_address()
+                if not mac:
+                    return attack_menu()
+                manager.ignore_mac = mac
+            else:
+                menu_helper.print_interfaces(manager.interfaces)
+                option = menu_helper.read_option(option="interface_exception")
+                manager.ignore_mac = manager.interfaces[option-1].mac_address
         if attack_type_option == 4:
             custom = menu_helper.yes_no_question('Target client: Specify custom mac or choose one from scan results (abort with 1)',option=['Custom/c','Scanned/s'])
             if custom:
