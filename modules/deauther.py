@@ -1,7 +1,5 @@
-import fcntl
 import os
 import select
-import shlex
 import subprocess
 import time
 from threading import Thread
